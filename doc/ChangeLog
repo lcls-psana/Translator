@@ -11,6 +11,10 @@ Package author: David A. Schneider
 Please describe any modifications that you made to the package in the
 reverse time order.
 
+Tag: V00-02-40
+2015-12-10 David Schneider
+- update to pdsdata 8.4.5 with modified Epix::Config100aV2, and Epix::ElementV3 JIRA PSAS-198
+
 Tag: V00-02-39
 2015-08-10 David Schneider
 - change unitTests to use psanaTestLib function to get output directory with SIT_ARCH
