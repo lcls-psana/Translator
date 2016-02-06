@@ -11,6 +11,10 @@ Package author: David A. Schneider
 Please describe any modifications that you made to the package in the
 reverse time order.
 
+Tag: V00-02-41
+2016-2-5 David Schneider
+- update to pdsdata 8.6.1 with Andor3d::FrameV1 (and ConfigV1) JIRA PSAS-214
+
 Tag: V00-02-40
 2015-12-10 David Schneider
 - update to pdsdata 8.4.5 with modified Epix::Config100aV2, and Epix::ElementV3 JIRA PSAS-198

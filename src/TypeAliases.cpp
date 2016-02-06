@@ -5,6 +5,7 @@
 #include "psddl_psana/acqiris.ddl.h"
 #include "psddl_psana/alias.ddl.h"
 #include "psddl_psana/andor.ddl.h"
+#include "psddl_psana/andor3d.ddl.h"
 #include "psddl_psana/arraychar.ddl.h"
 #include "psddl_psana/bld.ddl.h"
 #include "psddl_psana/camera.ddl.h"
@@ -65,6 +66,11 @@ TypeAliases::TypeAliases() {
   Andor.insert( & typeid(Psana::Andor::ConfigV1));
   Andor.insert( & typeid(Psana::Andor::FrameV1));
   m_alias2TypesMap["Andor"] = Andor;
+
+  TypeInfoSet Andor3d;
+  Andor3d.insert( & typeid(Psana::Andor3d::ConfigV1));
+  Andor3d.insert( & typeid(Psana::Andor3d::FrameV1));
+  m_alias2TypesMap["Andor3d"] = Andor3d;
 
   TypeInfoSet Arraychar;
   Arraychar.insert( & typeid(Psana::Arraychar::DataV1));

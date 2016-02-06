@@ -12,6 +12,7 @@ psddl/data/templates/hdf5Translator.tmpl?hdfwritermap_cpp
 #include "psddl_hdf2psana/acqiris.ddl.h"
 #include "psddl_hdf2psana/alias.ddl.h"
 #include "psddl_hdf2psana/andor.ddl.h"
+#include "psddl_hdf2psana/andor3d.ddl.h"
 #include "psddl_hdf2psana/arraychar.ddl.h"
 #include "psddl_hdf2psana/bld.ddl.h"
 #include "psddl_hdf2psana/camera.ddl.h"
@@ -66,6 +67,7 @@ using namespace psddl_hdf2psana::L3T;
 using namespace psddl_hdf2psana::Camera;
 using namespace psddl_hdf2psana::EvrData;
 using namespace psddl_hdf2psana::Bld;
+using namespace psddl_hdf2psana::Andor3d;
 using namespace psddl_hdf2psana::EpixSampler;
 using namespace psddl_hdf2psana::Arraychar;
 using namespace psddl_hdf2psana::TimeTool;
@@ -154,6 +156,8 @@ void HdfWriterMap::initialize() {
   m_mainMap[ & typeid(Psana::Acqiris::TdcConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Acqiris::TdcConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Acqiris::TdcDataV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Acqiris::TdcDataV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Alias::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Alias::ConfigV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Andor3d::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Andor3d::ConfigV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Andor3d::FrameV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Andor3d::FrameV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Andor::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Andor::ConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Andor::FrameV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Andor::FrameV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Arraychar::DataV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Arraychar::DataV1> >(), DaqType);
