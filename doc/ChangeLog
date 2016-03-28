@@ -11,6 +11,14 @@ Package author: David A. Schneider
 Please describe any modifications that you made to the package in the
 reverse time order.
 
+Tag: V00-02-42
+2016-3/28 David Schneider
+- deprecate fast_index option. Document new model with .smd (small data) files. 
+  Introduce fast_index_force option if fast_index is still needed.
+- add -q option to mpiexec commands in unit tests since we don't have openib installed
+  on the interactive nodes where I frequently test. Consequently we won't test for the
+  presence of openib on the build machines psdev etc.
+
 Tag: V00-02-41
 2016-2-5 David Schneider
 - update to pdsdata 8.6.1 with Andor3d::FrameV1 (and ConfigV1) JIRA PSAS-214
