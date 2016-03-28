@@ -154,7 +154,10 @@ void mpiGetWorld( int &worldSize, int &worldRank, std::string &processorName) {
   void FastIndex::identifyStreams(psana::PSAna &fwk, const std::vector<std::string> &input) {
     m_daqStreams.clear();
     m_controlStreams.clear();
-    if (input.size() != 1) MsgLog(m_logger, fatal, "input size is not one for fastIndex. Specify a single datasource, not a list of files.");
+    if (input.size()==0) MsgLog(m_logger, fatal, "fast_index: no input files given.\n"
+                                "Note: fast_index requires the input dataset to be specified\n"
+                                "through the command line, it cannot be specified in a psana config file.");
+    if (input.size() != 1) MsgLog(m_logger, fatal, "more than one input file given and fastIndex selected. Specify a single datasource, not a list of files.");
     MsgLog(m_logger, FASTLOGLVL, "fastindex - calling getStreams to figure out what streams are in the dataset");
     DataSource dataSource = fwk.dataSource(input);
     if (dataSource.empty()) {
@@ -616,6 +619,16 @@ int H5MpiTranslateApp::runAppMaster(std::string cfgFile, std::map<std::string, s
                                                 NUM_EVENTS_CHECK_DONE_CALIB_FILE_DEFAULT);
   
   m_fastIndex = cfgSvc.get("Translator.H5Output", "fast_index", false);
+  if (m_fastIndex) {
+    MsgLog(loggerMaster, error, "You have 'fast_index=1' in the config file.\n"
+           "The fast_index option has been deprecated.\n" 
+           "Fast indexing is now acheived by running against the small data files (add :smd to datasource string).\n"
+           "The web portal monitoring translator does this for you.\n"
+           "If for some reason you want to use the fast index code against the large xtc, then\n"
+           "set the option 'fast_index_force=1' in the config file.");
+    throw std::runtime_error("fast_index option is deprecated");
+  }
+  m_fastIndex = cfgSvc.get("Translator.H5Output", "fast_index_force", false);
   m_fastIndexMBhalfBlock = cfgSvc.get("Translator.H5Output", "fi_mb_half_block", 4.0);
   m_fastIndexNumberBlocksToTry = cfgSvc.get("Translator.H5Output", "fi_num_blocks", 150);
   

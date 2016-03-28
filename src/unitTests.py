@@ -68,7 +68,9 @@ def makeMpiTransCmd(min_events_per_calib_file,
     mpiRunCmd = sb.check_output(['which','mpirun']).strip()
     assert mpiRunCmd.endswith('mpirun'), "no mpirun command found"
 
-    transCmd = '%s -n %d h5-mpi-translate' % ('mpirun', njobs)
+    # add -q since we don't have blt openib on local machines where we test, 
+    # creates noise
+    transCmd = '%s -q -n %d h5-mpi-translate' % ('mpirun', njobs)
     
     if suppressWarnings:
         transCmd += ' -q -q'

@@ -564,6 +564,7 @@ std::string H5Output::readConfigParameters() {
 
   // remove all the keys that the h5-mpi-translate driver uses but H5Output does not:
   remainingConfigKeys.remove("fast_index");
+  remainingConfigKeys.remove("fast_index_force");
   remainingConfigKeys.remove("fi_mb_half_block");
   remainingConfigKeys.remove("fi_num_blocks");
   remainingConfigKeys.remove("num_events_check_done_calib_file");

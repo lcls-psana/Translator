@@ -386,16 +386,23 @@ split = NoSplit
 #### FAST INDEX ####
 #
 # For online analysis with live data, one of the impediments to keeping up with the data is the time 
-# it takes h5-mpi-translate's to read through the data to find the calib cycles. Typically the data is 
-# recorded in 6 or more separate files and each must be read through to identify the start of calib cycles. 
-# Unfortunately this read speed can be 30-40hz for a typical experiment - far short of the 120hz we'd like 
-# to obtain. A recent feature added to h5-mpi-translate takes advantage of the unique signature of each 
-# new calib cycle, combined with the regular structure of the separate data files in order to limit the 
-# reading to just one of the files. In this way, the h5-mpi-translate master rank need only get through the 
-# data it reads/searches at 20hz to keep up with the data. We have had good success with this feature 
-# recently, but it is not guaranteed to work. It is a temporary solution until a more robust way to do 
-# fast/live indexing is put in place. However in the meantime, the translator supports the following options 
-# to turn on fast indexing and controlling how much time is spent searching the other files
+# it takes h5-mpi-translate's to read through the data to find the calib cycles. As long as users
+# read the small data (adding :smd to the dataset specification) h5-mpi-translate should have no
+# trouble indexing the calib cycles in real time. 
+#
+# If for some reason there is a problem with the small data, users can fall back on the 
+# fast_index feature against the large xtc files, however be aware that the web portal 
+# adds :smd to the datasource, so you will have to coordinate with data management to
+# switch to the large xtc. Below we document fast_index.
+#
+# fast_index takes advantage of the unique signature of each 
+# new calib cycle, combined with the regular structure of the separate xtc data files in order to 
+# limit the reading to just one of the file. In this way, the h5-mpi-translate master rank 
+# need only get through the data it reads/searches at 20hz to keep up with the data. Part of why
+# it is deprecated is because it is not guaranteed to work, whereas small data will.
+#
+# The translator supports the following options to turn on fast indexing and controlling how much 
+# time is spent searching the other files
 #
 # fast_index=0                 # set to 1 to turn fast indexing on
 # fi_mb_half_block=12          # when fast indexing is on, use 12MB on each side, or 24MB for each block that is searched
