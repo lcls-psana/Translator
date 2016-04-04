@@ -53,6 +53,7 @@ TESTDATA_PARTITION = os.path.join(DATADIR,"test_051_sxr_sxrdaq10_e19-r057-s01-c0
 TESTDATA_EPICS = os.path.join(DATADIR, "test_020_sxr_sxr33211_e103-r0845-s00-c00.xtc")
 TESTDATA_CALIBDAMAGE = os.path.join(DATADIR, "test_080_cxi_cxi83714_e379-r0121-s00-c00_calibdamage.xtc")
 TESTDATA_TIMETOOL = os.path.join(DATADIR, "test_081_xpp_xppi0214_e439-r0054-s00-c00.xtc")
+TESTDATA_USDUSB_FEXCONFIGV1 = 'exp=xpp00316:run=384:dir=%s' % os.path.join(DATADIR, '/reg/g/psdm/data_test/multifile/test_020_xpp00316')
 
 #------------------
 # Utility functions / classes
@@ -1791,7 +1792,24 @@ class H5Output( unittest.TestCase ) :
        os.unlink(output_h5)
        for ln in err.split('\n'):
          self.assertTrue(ptl.filterPsanaStderr(ln), msg="stderr output ln=%s obtained from cmd=%s" % (ln, cmd))
-       
+
+    def test_usdusb_fex(self):
+        '''test translation of usdusb fex config, in particular name where 
+        I did by hand translation
+        '''
+        outputfile = os.path.join(OUTDIR, 'test_usdusb_fexconfig.h5')
+        cmd = 'psana -n 1 -m Translator.H5Output -o Translator.H5Output.output_file=%s -o Translator.H5Output.overwrite=1 %s' % (outputfile, TESTDATA_USDUSB_FEXCONFIGV1)
+        stdout, stderr = ptl.cmdTimeOut(cmd, 100)
+        assert stderr.strip()=='', "errors with cmd=%s, stderr=%s" % (cmd, stderr)
+        ds = psana.DataSource(outputfile)
+        cfgStore = ds.env().configStore()
+        fex = cfgStore.get(psana.UsdUsb.FexConfigV1, psana.Source('usbencoder'))
+        self.assertEqual(fex.name(0), 'test1')
+        self.assertEqual(fex.name(1), 'test2')
+        self.assertEqual(fex.name(2), 'test3')
+        self.assertEqual(fex.name(3), 'test4')
+        os.unlink(outputfile)
+
     def test_epics(self):
         '''Test epics translation. test_020 has 4 kinds of epics, string, short, enum, long and double.
         '''

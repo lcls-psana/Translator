@@ -338,6 +338,11 @@ TypeAliases::TypeAliases() {
   UsdUsb.insert( & typeid(Psana::UsdUsb::DataV1));
   m_alias2TypesMap["UsdUsb"] = UsdUsb;
 
+  TypeInfoSet UsdUsbFex;
+  UsdUsbFex.insert( & typeid(Psana::UsdUsb::FexConfigV1));
+  UsdUsbFex.insert( & typeid(Psana::UsdUsb::FexDataV1));
+  m_alias2TypesMap["UsdUsbFex"] = UsdUsbFex;
+
   TypeInfoSet pnCCD;
   pnCCD.insert( & typeid(Psana::PNCCD::ConfigV1));
   pnCCD.insert( & typeid(Psana::PNCCD::ConfigV2));

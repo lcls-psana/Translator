@@ -286,6 +286,8 @@ void HdfWriterMap::initialize() {
   m_mainMap[ & typeid(Psana::Timepix::DataV2) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Timepix::DataV2> >(), DaqType);
   m_mainMap[ & typeid(Psana::UsdUsb::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::UsdUsb::ConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::UsdUsb::DataV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::UsdUsb::DataV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::UsdUsb::FexConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::UsdUsb::FexConfigV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::UsdUsb::FexDataV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::UsdUsb::FexDataV1> >(), DaqType);
 
   // ndarrays
   m_mainMap[ & typeid(ndarray< int8_t, 1>) ] = MapValue(boost::make_shared<HdfWriterNDArray< int8_t, 1, false > >(), NdarrayType);  
