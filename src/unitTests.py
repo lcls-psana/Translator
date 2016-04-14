@@ -1,4 +1,4 @@
-#--------------------------------------------------------------------------
+#------------------------------------------------------------------------
 # Description:
 #   Test script for Translator/H5Output event processing
 #   
@@ -24,36 +24,36 @@ import glob
 import psana
 import h5py
 import psana_test.psanaTestLib as ptl
+from psana_test import obj2str
 
 # -----------------------------
 # Test data
 # -----------------------------
 SIT_ROOT = os.path.expandvars('$SIT_ROOT')
 assert SIT_ROOT != '$SIT_ROOT', '$SIT_ROOT is not defined. run sit_setup'
-DATADIR = os.path.join(SIT_ROOT,"data_test/Translator")
-SPLITSCANDATADIR    = os.path.join(SIT_ROOT,"data_test/multifile/test_002_xppd9714")
-SPLITSCANDATADIRBUG = os.path.join(SIT_ROOT,"data_test/multifile/test_006_xppd7114")
-NDARRAYADDBLANKDATADIRBUG = os.path.join(SIT_ROOT,"data_test/multifile/test_017_xppi0815")
-XPPTUTDATADIR=os.path.join(SIT_ROOT,"data_test/multifile/test_003_xpptut13")
-CALIBDATADIR=os.path.join(SIT_ROOT,"data_test/calib")
+SPLITSCANDATADIR    = os.path.join(ptl.getMultiFileDataDir(), "test_002_xppd9714")
+SPLITSCANDATADIRBUG = os.path.join(ptl.getMultiFileDataDir(), "test_006_xppd7114")
+NDARRAYADDBLANKDATADIRBUG = os.path.join(ptl.getMultiFileDataDir(), "test_017_xppi0815")
+XPPTUTDATADIR=os.path.join(ptl.getMultiFileDataDir(), "test_003_xpptut13")
 OUTDIR = ptl.getDataArchDir(pkg='Translator', datasubdir='test_output')
-TESTDATA_T1= os.path.join(DATADIR, "test_042_Translator_t1.xtc")
-TESTDATA_T1_INITIAL_DAMAGE = os.path.join(DATADIR,"test_046_Translator_t1_initial_damage.xtc")
-TESTDATA_T1_END_DAMAGE = os.path.join(DATADIR,"test_045_Translator_t1_end_damage.xtc")
-TESTDATA_T1_NEW_OUTOFORDER = os.path.join(DATADIR,"test_047_Translator_t1_new_out_of_order.xtc")
-TESTDATA_T1_PREVIOUS_OUTOFORDER = os.path.join(DATADIR,"test_048_Translator_t1_previously_seen_out_of_order.xtc")
-TESTDATA_AMO68413_r99_s2 = os.path.join(DATADIR,"test_041_Translator_amo68413-r99-s02-userEbeamDamage.xtc")
-TESTDATA_AMO64913_r182_s2_OUTOFORDER_FRAME = os.path.join(DATADIR,'test_039_Translator_amo64913-r182-s02-OutOfOrder_Frame.xtc')
-TESTDATA_AMO64913_r182_s2_NODAMAGE_DROPPED_OUTOFORDER = os.path.join(DATADIR,"test_040_Translator_amo64913-r182-s02-noDamage-dropped-OutOfOrder_Frame.xtc")
-TESTDATA_XCSCOM12_r52_s0 = os.path.join(DATADIR,"test_049_Translator_xcscom12-r52-s0-dupTimes-splitEvents.xtc")
-TESTDATA_T1_DROPPED_SRC = os.path.join(DATADIR,"test_044_Translator_t1_dropped_src.xtc")
-TESTDATA_T1_DROPPED = os.path.join(DATADIR,"test_043_Translator_t1_dropped.xtc")
-TESTDATA_ALIAS = os.path.join(DATADIR,"test_050_sxr_sxrb6813_e363-r0069-s00-c00.xtc")
-TESTDATA_PARTITION = os.path.join(DATADIR,"test_051_sxr_sxrdaq10_e19-r057-s01-c00.xtc")
-TESTDATA_EPICS = os.path.join(DATADIR, "test_020_sxr_sxr33211_e103-r0845-s00-c00.xtc")
-TESTDATA_CALIBDAMAGE = os.path.join(DATADIR, "test_080_cxi_cxi83714_e379-r0121-s00-c00_calibdamage.xtc")
-TESTDATA_TIMETOOL = os.path.join(DATADIR, "test_081_xpp_xppi0214_e439-r0054-s00-c00.xtc")
-TESTDATA_USDUSB_FEXCONFIGV1 = 'exp=xpp00316:run=384:dir=%s' % os.path.join(DATADIR, '/reg/g/psdm/data_test/multifile/test_020_xpp00316')
+TESTDATA_T1= os.path.join(ptl.getTestDataDir(), "test_042_Translator_t1.xtc")
+TESTDATA_T1_INITIAL_DAMAGE = os.path.join(ptl.getTestDataDir(),"test_046_Translator_t1_initial_damage.xtc")
+TESTDATA_T1_END_DAMAGE = os.path.join(ptl.getTestDataDir(),"test_045_Translator_t1_end_damage.xtc")
+TESTDATA_T1_NEW_OUTOFORDER = os.path.join(ptl.getTestDataDir(),"test_047_Translator_t1_new_out_of_order.xtc")
+TESTDATA_T1_PREVIOUS_OUTOFORDER = os.path.join(ptl.getTestDataDir(),"test_048_Translator_t1_previously_seen_out_of_order.xtc")
+TESTDATA_AMO68413_r99_s2 = os.path.join(ptl.getTestDataDir(),"test_041_Translator_amo68413-r99-s02-userEbeamDamage.xtc")
+TESTDATA_AMO64913_r182_s2_OUTOFORDER_FRAME = os.path.join(ptl.getTestDataDir(),'test_039_Translator_amo64913-r182-s02-OutOfOrder_Frame.xtc')
+TESTDATA_AMO64913_r182_s2_NODAMAGE_DROPPED_OUTOFORDER = os.path.join(ptl.getTestDataDir(),"test_040_Translator_amo64913-r182-s02-noDamage-dropped-OutOfOrder_Frame.xtc")
+TESTDATA_XCSCOM12_r52_s0 = os.path.join(ptl.getTestDataDir(),"test_049_Translator_xcscom12-r52-s0-dupTimes-splitEvents.xtc")
+TESTDATA_T1_DROPPED_SRC = os.path.join(ptl.getTestDataDir(),"test_044_Translator_t1_dropped_src.xtc")
+TESTDATA_T1_DROPPED = os.path.join(ptl.getTestDataDir(),"test_043_Translator_t1_dropped.xtc")
+TESTDATA_ALIAS = os.path.join(ptl.getTestDataDir(),"test_050_sxr_sxrb6813_e363-r0069-s00-c00.xtc")
+TESTDATA_PARTITION = os.path.join(ptl.getTestDataDir(),"test_051_sxr_sxrdaq10_e19-r057-s01-c00.xtc")
+TESTDATA_EPICS = os.path.join(ptl.getTestDataDir(), "test_020_sxr_sxr33211_e103-r0845-s00-c00.xtc")
+TESTDATA_CALIBDAMAGE = os.path.join(ptl.getTestDataDir(), "test_080_cxi_cxi83714_e379-r0121-s00-c00_calibdamage.xtc")
+TESTDATA_TIMETOOL = os.path.join(ptl.getTestDataDir(), "test_081_xpp_xppi0214_e439-r0054-s00-c00.xtc")
+TESTDATA_USDUSB_FEXCONFIGV1 = 'exp=xpp00316:run=384:dir=%s' % os.path.join(ptl.getMultiFileDataDir(),'test_020_xpp00316')
+TESTDATA_OCEANOPTICS_DATAV3 = 'exp=xppi6115:run=31:dir=%s' % os.path.join(ptl.getMultiFileDataDir(), 'test_024_xppi6115')
 
 #------------------
 # Utility functions / classes
@@ -273,7 +273,7 @@ class H5Output( unittest.TestCase ) :
     	before calling the test method; any exception raised by this method 
     	will be considered an error rather than a test failure.  
     	"""
-        assert os.path.exists(DATADIR), "Data dir: %s does not exist, cannot run unit tests" % DATADIR
+        assert os.path.exists(ptl.getTestDataDir()), "Data dir: %s does not exist, cannot run unit tests" % ptl.getTestDataDir()
         assert os.path.exists(OUTDIR), "Output directory: %s does not exist, can't run unit tests" % OUTDIR
         self.cleanUp = True      # Several tests run psana to produce .h5 files.  
                                  # If cleanup is True the files are deleted when
@@ -1342,7 +1342,7 @@ class H5Output( unittest.TestCase ) :
         output_h5 = os.path.join(OUTDIR,"unit-test_xpptut13_r71.h5")
         cfgfile = writeCfgFile(input_file, output_h5, 
                                moduleList="cspad_mod.CsPadCalib Translator.H5Output",
-                               psanaCfg='calib-dir=%s' % CALIBDATADIR)
+                               psanaCfg='calib-dir=%s' % ptl.getTestCalibDir())
         cfgfile.write("deflate = -1\n")
         self.runPsanaOnCfg(cfgfile,output_h5, extraOpts='-n 2',printPsanaOutput=self.printPsanaOutput)
         cfgfile.close()
@@ -1377,7 +1377,7 @@ class H5Output( unittest.TestCase ) :
         cfgfile = writeCfgFile(input_file, output_h5, moduleList="cspad_mod.CsPadCalib Translator.H5Output")
         cfgfile.write("deflate = -1\n")
         self.runPsanaOnCfg(cfgfile,output_h5, 
-                           extraOpts=('--calib-dir %s' % CALIBDATADIR),
+                           extraOpts=('--calib-dir %s' % ptl.getTestCalibDir()),
                            printPsanaOutput=self.printPsanaOutput)
         cfgfile.close()
         f = h5py.File(output_h5,'r')  # will crash if file not present
@@ -1410,7 +1410,7 @@ class H5Output( unittest.TestCase ) :
         # test that calibrated data written where uncalibrated would be:
         cfgfile = writeCfgFile(input_file, output_h5, 
                                moduleList="cspad_mod.CsPadCalib Translator.H5Output",
-                               psanaCfg='calib-dir=%s' % CALIBDATADIR)
+                               psanaCfg='calib-dir=%s' % ptl.getTestCalibDir())
         cfgfile.write("deflate = -1\n")
         self.runPsanaOnCfg(cfgfile,output_h5, extraOpts='-n 2',printPsanaOutput=self.printPsanaOutput)
         cfgfile.close()
@@ -1589,7 +1589,7 @@ class H5Output( unittest.TestCase ) :
                                 cleanUp = self.cleanUp)
 # can't do calibration if doing dump - will compare calibrated to uncalibrated
 #                                downstreamModules = ["cspad_mod.CsPadCalib"],
-#                                extraOptions=['psana.calib-dir=%s' % CALIBDATADIR])
+#                                extraOptions=['psana.calib-dir=%s' % ptl.getTestCalibDir()])
         
         diff_cmd = 'diff %s %s' % (mpiTest.xtc_dump, mpiTest.h5_dump)
         p = sb.Popen(diff_cmd, shell=True, stdout=sb.PIPE, stderr=sb.PIPE)
@@ -1640,7 +1640,7 @@ class H5Output( unittest.TestCase ) :
                                 verbose = False,
                                 doDump = False,
                                 downstreamModules = ["cspad_mod.CsPadCalib"],
-                                extraOptions=['psana.calib-dir=%s' % CALIBDATADIR])
+                                extraOptions=['psana.calib-dir=%s' % ptl.getTestCalibDir()])
 
         f = h5py.File(mpiTest.output_h5,'r')
         calibStore=f['/Configure:0000/CalibStore']
@@ -1663,7 +1663,7 @@ class H5Output( unittest.TestCase ) :
                                 cleanUp = True,
                                 doDump = False,
                                 downstreamModules = ["cspad_mod.CsPadCalib,Translator.TestEndDataPsanaMod"],
-                                extraOptions=['psana.calib-dir=%s' % CALIBDATADIR])
+                                extraOptions=['psana.calib-dir=%s' % ptl.getTestCalibDir()])
         f=h5py.File(mpiTest.output_h5,'r')
         # the testing module Translator.TestEndDataPsanaMod will put the below string, and an array of 0.0, 1.0, 2.0
         # into the config store during begin/end job, run, and each endcalibcycle. It only puts it into the
@@ -1809,6 +1809,37 @@ class H5Output( unittest.TestCase ) :
         self.assertEqual(fex.name(2), 'test3')
         self.assertEqual(fex.name(3), 'test4')
         os.unlink(outputfile)
+
+    def test_oceanoptics_dataV3(self):
+        def dumpType(evt, srcList, pstype):
+            results = {}
+            for src in srcList:
+                obj = evt.get(pstype, psana.Source(src))
+                assert obj is not None
+                results[src]= obj2str(obj)
+            return results
+
+        ooAliases = ['oospec_0','oospec_1','oospec_2']
+        dsXtc = psana.DataSource(TESTDATA_OCEANOPTICS_DATAV3)
+        xtcDumps = dumpType(dsXtc.events().next(), ooAliases, psana.OceanOptics.DataV3)
+        del dsXtc
+
+        outputfile = os.path.join(OUTDIR, 'test_openoptics_dataV3.h5')
+        cmd = 'psana -n 1 -m Translator.H5Output -o Translator.H5Output.output_file=%s -o Translator.H5Output.overwrite=1 %s' % (outputfile, TESTDATA_OCEANOPTICS_DATAV3)
+        stdout, stderr = ptl.cmdTimeOut(cmd, 100)
+        assert stderr.strip()=='', "errors with cmd=%s, stderr=%s" % (cmd, stderr)
+        dsH5 = psana.DataSource(outputfile)
+        h5Dumps = dumpType(dsH5.events().next(), ooAliases, psana.OceanOptics.DataV3)
+        del dsH5
+        os.unlink(outputfile)
+
+        for alias in ooAliases:
+            xtcDump = xtcDumps[alias]
+            h5Dump = h5Dumps[alias]
+            assert(len(xtcDump)>0)
+            assert(len(h5Dump)>0)
+            self.assertEqual(xtcDump, h5Dump, msg='for alias=%s OceanOptics.DataV3 xtcDump != h5Dump.\ndataset=%s.\n.xtc=%s\nh5=%s' % 
+                             (alias, TESTDATA_OCEANOPTICS_DATAV3, xtcDump, h5Dump))
 
     def test_epics(self):
         '''Test epics translation. test_020 has 4 kinds of epics, string, short, enum, long and double.
