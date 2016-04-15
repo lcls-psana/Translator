@@ -54,6 +54,7 @@ TESTDATA_CALIBDAMAGE = os.path.join(ptl.getTestDataDir(), "test_080_cxi_cxi83714
 TESTDATA_TIMETOOL = os.path.join(ptl.getTestDataDir(), "test_081_xpp_xppi0214_e439-r0054-s00-c00.xtc")
 TESTDATA_USDUSB_FEXCONFIGV1 = 'exp=xpp00316:run=384:dir=%s' % os.path.join(ptl.getMultiFileDataDir(),'test_020_xpp00316')
 TESTDATA_OCEANOPTICS_DATAV3 = 'exp=xppi6115:run=31:dir=%s' % os.path.join(ptl.getMultiFileDataDir(), 'test_024_xppi6115')
+TESTDATA_GENERIC1D_DATAV0 = 'exp=mfxc0116:run=66:dir=%s' % os.path.join(ptl.getMultiFileDataDir(), 'test_019_mfxc0116')
 
 #------------------
 # Utility functions / classes
@@ -1840,6 +1841,52 @@ class H5Output( unittest.TestCase ) :
             assert(len(h5Dump)>0)
             self.assertEqual(xtcDump, h5Dump, msg='for alias=%s OceanOptics.DataV3 xtcDump != h5Dump.\ndataset=%s.\n.xtc=%s\nh5=%s' % 
                              (alias, TESTDATA_OCEANOPTICS_DATAV3, xtcDump, h5Dump))
+
+    def test_generic1d_dataV0(self):
+        def getGenericDump(dsString, numEvents):
+            ds = psana.DataSource(dsString)
+            cfgObj = ds.env().configStore().get(psana.Generic1D.ConfigV0, psana.Source('DetInfo(MfxEndstation.0:Wave8.0)'))
+            assert cfgObj
+            cfgDump = obj2str(cfgObj)
+            assert cfgDump
+            evtDumpList = []
+            for evtIdx, evt in enumerate(ds.events()):
+                if evtIdx >= numEvents: break
+                evtObj = evt.get(psana.Generic1D.DataV0, psana.Source('DetInfo(MfxEndstation.0:Wave8.0)'))
+                if evtObj:
+                    evtDumpList.append(obj2str(evtObj))
+            assert len(evtDumpList)
+            del ds
+            return cfgDump, evtDumpList
+
+        def stripOffLastLine(dumpStr):
+            lines = dumpStr.split('\n')
+            assert len(lines)>1
+            assert lines[-1].strip().startswith('data_size: ')
+            return lines[0:-1]
+
+        numEvents = 10
+        cfgDumpXtc, dataDumpListXtc = getGenericDump(TESTDATA_GENERIC1D_DATAV0, numEvents)
+        outputfile = os.path.join(OUTDIR, 'test_generic1d_dataV0.h5')
+        cmd = 'psana -n %d -m Translator.H5Output -o Translator.H5Output.output_file=%s -o Translator.H5Output.overwrite=1 %s' % \
+              (numEvents+2, outputfile, TESTDATA_GENERIC1D_DATAV0)
+        stdout, stderr = ptl.cmdTimeOut(cmd, 100)
+        assert stderr.strip()=='', "errors with cmd=%s, stderr=%s" % (cmd, stderr)
+        cfgDumpH5, dataDumpListH5 = getGenericDump(outputfile, numEvents)
+        os.unlink(outputfile)
+        self.assertEqual(cfgDumpXtc, cfgDumpH5, msg='xtc and h5 config objects differ for generic1D.\nxtc=\n%s\nhdf=\n%s' % \
+                         (cfgDumpXtc, cfgDumpH5))
+        self.assertEqual(len(dataDumpListXtc), len(dataDumpListH5),
+                         msg='xtc and h5 length of generic1d DataV0s dumped is different. xtc=%d h5=%d' % \
+                         (len(dataDumpListXtc), len(dataDumpListH5)))
+
+        for idx, xtcDump, h5Dump in zip(range(len(dataDumpListXtc)), dataDumpListXtc, dataDumpListH5):
+            xtcDump = stripOffLastLine(xtcDump)
+            h5Dump = stripOffLastLine(h5Dump)
+            self.assertEqual(xtcDump, h5Dump,
+                             msg = 'generic1d dataV0 at list position %d differ between xtc and h5.\nxtc=\n%s\nh5=\n%s' % \
+                             (idx, xtcDump, h5Dump))
+
 
     def test_epics(self):
         '''Test epics translation. test_020 has 4 kinds of epics, string, short, enum, long and double.

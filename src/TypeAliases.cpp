@@ -19,6 +19,7 @@
 #include "psddl_psana/evr.ddl.h"
 #include "psddl_psana/fccd.ddl.h"
 #include "psddl_psana/fli.ddl.h"
+#include "psddl_psana/generic1d.ddl.h"
 #include "psddl_psana/genericpgp.ddl.h"
 #include "psddl_psana/gsc16ai.ddl.h"
 #include "psddl_psana/imp.ddl.h"
@@ -200,6 +201,11 @@ TypeAliases::TypeAliases() {
   GMD.insert( & typeid(Psana::Bld::BldDataGMDV1));
   GMD.insert( & typeid(Psana::Bld::BldDataGMDV2));
   m_alias2TypesMap["GMD"] = GMD;
+
+  TypeInfoSet Generic1D;
+  Generic1D.insert( & typeid(Psana::Generic1D::ConfigV0));
+  Generic1D.insert( & typeid(Psana::Generic1D::DataV0));
+  m_alias2TypesMap["Generic1D"] = Generic1D;
 
   TypeInfoSet GenericPgp;
   GenericPgp.insert( & typeid(Psana::GenericPgp::ConfigV1));

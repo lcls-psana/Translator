@@ -26,6 +26,7 @@ psddl/data/templates/hdf5Translator.tmpl?hdfwritermap_cpp
 #include "psddl_hdf2psana/evr.ddl.h"
 #include "psddl_hdf2psana/fccd.ddl.h"
 #include "psddl_hdf2psana/fli.ddl.h"
+#include "psddl_hdf2psana/generic1d.ddl.h"
 #include "psddl_hdf2psana/genericpgp.ddl.h"
 #include "psddl_hdf2psana/gsc16ai.ddl.h"
 #include "psddl_hdf2psana/imp.ddl.h"
@@ -84,6 +85,7 @@ using namespace psddl_hdf2psana::Partition;
 using namespace psddl_hdf2psana::FCCD;
 using namespace psddl_hdf2psana::Alias;
 using namespace psddl_hdf2psana::Ipimb;
+using namespace psddl_hdf2psana::Generic1D;
 using namespace psddl_hdf2psana::Orca;
 using namespace psddl_hdf2psana::Fli;
 using namespace psddl_hdf2psana::Acqiris;
@@ -229,6 +231,8 @@ void HdfWriterMap::initialize() {
   m_mainMap[ & typeid(Psana::FCCD::FccdConfigV2) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::FCCD::FccdConfigV2> >(), DaqType);
   m_mainMap[ & typeid(Psana::Fli::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Fli::ConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Fli::FrameV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Fli::FrameV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Generic1D::ConfigV0) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Generic1D::ConfigV0> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Generic1D::DataV0) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Generic1D::DataV0> >(), DaqType);
   m_mainMap[ & typeid(Psana::GenericPgp::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::GenericPgp::ConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Gsc16ai::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Gsc16ai::ConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Gsc16ai::DataV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Gsc16ai::DataV1> >(), DaqType);
