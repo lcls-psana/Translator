@@ -65,6 +65,7 @@ TypeAliases::TypeAliases() {
 
   TypeInfoSet Andor;
   Andor.insert( & typeid(Psana::Andor::ConfigV1));
+  Andor.insert( & typeid(Psana::Andor::ConfigV2));
   Andor.insert( & typeid(Psana::Andor::FrameV1));
   m_alias2TypesMap["Andor"] = Andor;
 
