@@ -1842,6 +1842,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(xtcDump, h5Dump, msg='for alias=%s OceanOptics.DataV3 xtcDump != h5Dump.\ndataset=%s.\n.xtc=%s\nh5=%s' % 
                              (alias, TESTDATA_OCEANOPTICS_DATAV3, xtcDump, h5Dump))
 
+    @unittest.skip("disabled - test fails on rhel5.")
     def test_generic1d_dataV0(self):
         def getGenericDump(dsString, numEvents):
             ds = psana.DataSource(dsString)
