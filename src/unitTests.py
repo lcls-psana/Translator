@@ -10,6 +10,7 @@
 #--------------------------------
 import sys
 import os
+import time
 import stat
 import tempfile
 import unittest
@@ -1842,52 +1843,34 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(xtcDump, h5Dump, msg='for alias=%s OceanOptics.DataV3 xtcDump != h5Dump.\ndataset=%s.\n.xtc=%s\nh5=%s' % 
                              (alias, TESTDATA_OCEANOPTICS_DATAV3, xtcDump, h5Dump))
 
-    @unittest.skip("disabled - test fails on rhel5.")
-    def test_generic1d_dataV0(self):
-        def getGenericDump(dsString, numEvents):
-            ds = psana.DataSource(dsString)
-            cfgObj = ds.env().configStore().get(psana.Generic1D.ConfigV0, psana.Source('DetInfo(MfxEndstation.0:Wave8.0)'))
-            assert cfgObj
-            cfgDump = obj2str(cfgObj)
-            assert cfgDump
-            evtDumpList = []
-            for evtIdx, evt in enumerate(ds.events()):
-                if evtIdx >= numEvents: break
-                evtObj = evt.get(psana.Generic1D.DataV0, psana.Source('DetInfo(MfxEndstation.0:Wave8.0)'))
-                if evtObj:
-                    evtDumpList.append(obj2str(evtObj))
-            assert len(evtDumpList)
-            del ds
-            return cfgDump, evtDumpList
+    def test_generic1d_dataV0(self):            
+        cfgDepth = np.array([2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4], np.int)
+        cfgLen = 4096
+        cfgOffset = 10
+        cfgSampleType = np.array([1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2], np.int)
+        cfgDataOffsets = np.array([0, 8192, 16384, 24576, 32768, 40960, 49152, 57344, 65536, 81920, 98304, 114688, 131072, 147456, 163840, 180224], np.int)
 
-        def stripOffLastLine(dumpStr):
-            lines = dumpStr.split('\n')
-            assert len(lines)>1
-            assert lines[-1].strip().startswith('data_size: ')
-            return lines[0:-1]
+        evtChMeans = np.array([32332.8232421875, 32842.461181640625, 32787.649658203125, 32242.1279296875, 32728.6484375, 32775.515380859375, 32774.3291015625, 32712.96142578125, 
+                               130722.67260742188, 129934.55932617188, 130061.32397460938, 129807.03295898438, 156133.08837890625, 156152.8046875, 133423.43676757812, 106196.09326171875], np.float)
 
-        numEvents = 10
-        cfgDumpXtc, dataDumpListXtc = getGenericDump(TESTDATA_GENERIC1D_DATAV0, numEvents)
         outputfile = os.path.join(OUTDIR, 'test_generic1d_dataV0.h5')
-        cmd = 'psana -n %d -m Translator.H5Output -o Translator.H5Output.output_file=%s -o Translator.H5Output.overwrite=1 %s' % \
-              (numEvents+2, outputfile, TESTDATA_GENERIC1D_DATAV0)
+        cmd = 'psana -n 4 -m Translator.H5Output -o Translator.H5Output.output_file=%s -o Translator.H5Output.overwrite=1 %s' % \
+              (outputfile, TESTDATA_GENERIC1D_DATAV0)
         stdout, stderr = ptl.cmdTimeOut(cmd, 100)
         assert stderr.strip()=='', "errors with cmd=%s, stderr=%s" % (cmd, stderr)
-        cfgDumpH5, dataDumpListH5 = getGenericDump(outputfile, numEvents)
+        h5 = h5py.File(outputfile,'r')
+
+        self.assertTrue(all(cfgDepth == h5['Configure:0000/Generic1D::ConfigV0/MfxEndstation.0:Wave8.0/Depth'][:]), msg='cfgdepth !=')
+        self.assertTrue(all(cfgSampleType == h5['Configure:0000/Generic1D::ConfigV0/MfxEndstation.0:Wave8.0/SampleType'][:]), msg='cfgSampleType !=')
+        for ch in range(16):
+            self.assertEqual(cfgLen, h5['Configure:0000/Generic1D::ConfigV0/MfxEndstation.0:Wave8.0/Length'][ch], msg='ch=%d len wrong' % ch)
+            self.assertEqual(cfgOffset, h5['Configure:0000/Generic1D::ConfigV0/MfxEndstation.0:Wave8.0/Offset'][ch], msg='ch=%d offset wrong' % ch)
+            chMeanH5evt0 = np.mean(h5['Configure:0000/Run:0000/CalibCycle:0000/Generic1D::DataV0/MfxEndstation.0:Wave8.0/channel:%2.2d' % ch][0])
+            self.assertAlmostEqual(evtChMeans[ch], chMeanH5evt0 , places=1, msg='ch=%d evt expected=%.2f != h5=%.2f' % (ch, evtChMeans[ch], chMeanH5evt0))
+        h5.close()
+        del h5
+        time.sleep(0.5)
         os.unlink(outputfile)
-        self.assertEqual(cfgDumpXtc, cfgDumpH5, msg='xtc and h5 config objects differ for generic1D.\nxtc=\n%s\nhdf=\n%s' % \
-                         (cfgDumpXtc, cfgDumpH5))
-        self.assertEqual(len(dataDumpListXtc), len(dataDumpListH5),
-                         msg='xtc and h5 length of generic1d DataV0s dumped is different. xtc=%d h5=%d' % \
-                         (len(dataDumpListXtc), len(dataDumpListH5)))
-
-        for idx, xtcDump, h5Dump in zip(range(len(dataDumpListXtc)), dataDumpListXtc, dataDumpListH5):
-            xtcDump = stripOffLastLine(xtcDump)
-            h5Dump = stripOffLastLine(h5Dump)
-            self.assertEqual(xtcDump, h5Dump,
-                             msg = 'generic1d dataV0 at list position %d differ between xtc and h5.\nxtc=\n%s\nh5=\n%s' % \
-                             (idx, xtcDump, h5Dump))
-
 
     def test_epics(self):
         '''Test epics translation. test_020 has 4 kinds of epics, string, short, enum, long and double.

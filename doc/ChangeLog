@@ -11,6 +11,10 @@ Package author: David A. Schneider
 Please describe any modifications that you made to the package in the
 reverse time order.
 
+Tag: V00-02-49
+2016-4-20 David Schneider
+- rewrite unit test that failed. PSAS-236
+
 Tag: V00-02-48
 2016-4-19 David Schneider
 - remove unit test that fails on rhel5 debug: PSAS-236
