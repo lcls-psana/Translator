@@ -174,6 +174,7 @@ void HdfWriterMap::initialize() {
   m_mainMap[ & typeid(Psana::Bld::BldDataEBeamV5) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataEBeamV5> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataEBeamV6) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataEBeamV6> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataEBeamV7) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataEBeamV7> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Bld::BldDataEOrbitsV0) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataEOrbitsV0> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataFEEGasDetEnergy) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataFEEGasDetEnergy> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataFEEGasDetEnergyV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataFEEGasDetEnergyV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataGMDV0) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataGMDV0> >(), DaqType);

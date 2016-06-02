@@ -117,6 +117,10 @@ TypeAliases::TypeAliases() {
   EBeam.insert( & typeid(Psana::Bld::BldDataEBeamV7));
   m_alias2TypesMap["EBeam"] = EBeam;
 
+  TypeInfoSet EOrbits;
+  EOrbits.insert( & typeid(Psana::Bld::BldDataEOrbitsV0));
+  m_alias2TypesMap["EOrbits"] = EOrbits;
+
   TypeInfoSet Encoder;
   Encoder.insert( & typeid(Psana::Encoder::ConfigV1));
   Encoder.insert( & typeid(Psana::Encoder::ConfigV2));
