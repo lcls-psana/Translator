@@ -265,6 +265,7 @@ void HdfWriterMap::initialize() {
   m_mainMap[ & typeid(Psana::PNCCD::ConfigV2) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::PNCCD::ConfigV2> >(), DaqType);
   m_mainMap[ & typeid(Psana::PNCCD::FramesV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::PNCCD::FramesV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Partition::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Partition::ConfigV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Partition::ConfigV2) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Partition::ConfigV2> >(), DaqType);
   m_mainMap[ & typeid(Psana::Pimax::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Pimax::ConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Pimax::FrameV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Pimax::FrameV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Princeton::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Princeton::ConfigV1> >(), DaqType);

@@ -263,6 +263,7 @@ TypeAliases::TypeAliases() {
 
   TypeInfoSet Partition;
   Partition.insert( & typeid(Psana::Partition::ConfigV1));
+  Partition.insert( & typeid(Psana::Partition::ConfigV2));
   m_alias2TypesMap["Partition"] = Partition;
 
   TypeInfoSet PhaseCavity;
