@@ -6,7 +6,10 @@
 #------------------------------------------------------------------------
 
 
+import os
 from Translator.unitTests import *
 
 if __name__ == "__main__":
-    unittest.main(argv=[sys.argv[0], '-v'])
+    # rhel5 build machine is heavily loaded, skip tests here
+    if not os.environ['SIT_ARCH'].find('-rhel5-')>0:
+         unittest.main(argv=[sys.argv[0], '-v'])

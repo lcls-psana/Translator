@@ -11,6 +11,10 @@ Package author: David A. Schneider
 Please describe any modifications that you made to the package in the
 reverse time order.
 
+Tag: V00-02-52
+2016-6-14 David Schneider
+- disable unit test on rhel5 because build machine is too loaded
+
 Tag: V00-02-51
 2016-6-13 David Schneider
 - update to pdsdata 8.6.12 for Partition::ConfigV2 JIRA PSAS-241
