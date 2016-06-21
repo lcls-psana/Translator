@@ -11,6 +11,10 @@ Package author: David A. Schneider
 Please describe any modifications that you made to the package in the
 reverse time order.
 
+Tag: V00-02-53
+2016-6-20 David Schneider
+- incorporate detector xface images into Translation JIRA PSAS-246
+
 Tag: V00-02-52
 2016-6-14 David Schneider
 - disable unit test on rhel5 because build machine is too loaded

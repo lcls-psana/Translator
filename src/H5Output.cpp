@@ -1073,19 +1073,40 @@ void H5Output::setEventKeysToTranslate(PSEvt::Event &evt, PSEnv::Env &env,
   }
 
   list<EventKeyTranslation> toTranslateFromEvent;
+
+  set<EventKey> srcEventKeysToSkipThisEventForDAQData;
+  set<Pds::Src> srcToSkipThisEventForDAQData;
+  
+  for (keyIter = eventKeysFromEvent.begin(); keyIter != eventKeysFromEvent.end(); ++keyIter) {
+    if (hasSrcDoNotTranslatePrefix(keyIter->key())) {
+      srcEventKeysToSkipThisEventForDAQData.insert(*keyIter);
+      srcToSkipThisEventForDAQData.insert(keyIter->src());
+    }
+  }
+
   for (keyIter = eventKeysFromEvent.begin(); keyIter != eventKeysFromEvent.end(); ++keyIter) {
     bool eventFilterKey = hasDoNotTranslatePrefix(keyIter->key());
     if (eventFilterKey) {
       eventIsFiltered = true;
       continue;
     }
-
     if (eventIsFiltered) continue;
+
+    if (srcEventKeysToSkipThisEventForDAQData.find(*keyIter) != srcEventKeysToSkipThisEventForDAQData.end()) continue;
 
     TypeClass typeClass;
     boost::shared_ptr<HdfWriterFromEvent> hdfWriter = checkTranslationFilters(evt, *keyIter,true, typeClass);
     if (not hdfWriter) continue;
 
+    bool inSrcToSkipForThisEventSet =
+      srcToSkipThisEventForDAQData.find(keyIter->src()) != srcToSkipThisEventForDAQData.end();
+    if (inSrcToSkipForThisEventSet) {
+      bool isDaqData = keyIter->key().size()==0;
+      if (isDaqData) {
+        continue;
+      }
+    }
+    
     Pds::Damage damage = getDamageForEventKey(*keyIter, damageMap);
     toTranslateFromEvent.push_back(EventKeyTranslation(*keyIter, damage, hdfWriter,
                                                        EventKeyTranslation::NonBlank, 

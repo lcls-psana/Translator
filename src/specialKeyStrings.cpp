@@ -5,6 +5,7 @@
 
 namespace {
 
+const std::string src_do_not_translate("src_do_not_translate");
 const std::string do_not_translate("do_not_translate");
 const std::string translate_vlen("translate_vlen");
 
@@ -45,6 +46,10 @@ const std::string & Translator::doNotTranslatePrefix() {
   return do_not_translate;
 }
 
+const std::string & Translator::srcDoNotTranslatePrefix() { 
+  return src_do_not_translate;
+}
+
 const std::string & Translator::ndarrayVlenPrefix() { 
   return translate_vlen;
 }
@@ -53,6 +58,12 @@ bool Translator::hasDoNotTranslatePrefix(const std::string &key,
                                          std::string *keyWithPrefixStripped) 
 {
   return hasPrefix(doNotTranslatePrefix(), key, keyWithPrefixStripped);
+}
+
+bool Translator::hasSrcDoNotTranslatePrefix(const std::string &key, 
+                                            std::string *keyWithPrefixStripped) 
+{
+  return hasPrefix(srcDoNotTranslatePrefix(), key, keyWithPrefixStripped);
 }
 
 bool Translator::hasNDArrayVlenPrefix(const std::string &key, 

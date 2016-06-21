@@ -1,6 +1,5 @@
 import os
 import sys
-from collections import namedtuple
 import psana
 import numpy as np
 
@@ -13,17 +12,22 @@ def warning(msg):
 def info(msg):
     sys.stdout.write('INFO: %s: %s\n' % (os.path.basename(__file__), msg))
     sys.stdout.flush()
-    
+
+class AliasedSrc(object):
+    def __init__(self, src, alias, detector, evtnum):
+        self.src=src
+        self.alias=alias
+        self.detector=detector
+        self.evtnum=evtnum
+        
 class PsanaModuleDetectorXface(object):
     def __init__(self):
-        pass
+        self.raw_freq = self.configInt("raw_freq", 0)
 
     def beginjob(self, evt, env):
         pass
     
     def beginrun(self, evt, env):
-        AliasedSrc = namedtuple('AliasedSrc', 'src alias detector')
-
         amap=env.aliasMap()
         self.imageDetectorList = []
         for src in amap.srcs():
@@ -39,7 +43,8 @@ class PsanaModuleDetectorXface(object):
             info('identified an area detector: alias=%s src=%s' % (alias, src))
             self.imageDetectorList.append(AliasedSrc(src=src,
                                                      alias=amap.alias(src),
-                                                     detector=det))
+                                                     detector=det,
+                                                     evtnum=-1))
             for method in CALIB_STORE_METHODS_TO_SAVE:
                 arr = None
                 try:
@@ -67,4 +72,8 @@ class PsanaModuleDetectorXface(object):
                                     "deployed for this run" % alias)
             
                 continue
+            
             evt.put(arr, src, '%s:image' % alias)
+            srd.evtnum += 1
+            if (self.raw_freq <= 0) or (srd.evtnum % self.raw_freq != 0):
+                evt.put(str(""), src, "src_do_not_translate")

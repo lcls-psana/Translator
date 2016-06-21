@@ -8,12 +8,22 @@ namespace Translator {
 /// returns "do_not_translate"
 const std::string & doNotTranslatePrefix();
 
+/// returns "src_do_not_translate"
+const std::string & srcDoNotTranslatePrefix();
+
 /// returns true if "do_not_translate" starts key.
 /// optionally, will return a string that has "do_not_translate", 
 /// "do_not_translate:" or "do_not_translate_" stripped from the
 /// input key. This is returned through the output argument - 
 /// keyWithPrefixStripped
 bool hasDoNotTranslatePrefix(const std::string &key, std::string *keyWithPrefixStripped=NULL);
+
+/// returns true if "src_do_not_translate" starts key.
+/// optionally, will return a string that has "src_do_not_translate", 
+/// "src_do_not_translate:" or "src_do_not_translate_" stripped from the
+/// input key. This is returned through the output argument - 
+/// keyWithPrefixStripped
+bool hasSrcDoNotTranslatePrefix(const std::string &key, std::string *keyWithPrefixStripped=NULL);
 
 /// returns translate_vlen
 const std::string & ndarrayVlenPrefix();

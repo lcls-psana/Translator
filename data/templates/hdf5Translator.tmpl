@@ -80,6 +80,7 @@ store_epics = calib_repeat
 #    key filtering    -  for example, include only ndarrays with a given key string
 #    calibration      -  do not translate original xtc if a calibrated version is found
 #    eventkey filtering -very fine control over filtering - specify type,src and key
+#    event src filtering - on a per event basis, filter all DAQ data associated with a src
 #
 # Type filtering is based on sets of Psana data types. If you know what detectors or 
 # devices to filter, leave type filtering alone and go to src_filter. 
@@ -195,6 +196,26 @@ type_filter = include all
 #
 
 src_filter = include all
+
+  
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# EVENT SRC FILTERING
+#
+# event src filtering is a mechanism to filter the DAQ data for a src
+# on a per event basis. It is not an option one would set in the psana
+# config file, rather it is something that downstream psana modules would
+# do. They put an key in the event that has the source they want to filter
+# and a keystring that starts with "src_do_not_translate"
+# for example, from a python module
+#
+#   evt.put(str(""), src, "src_do_not_translate")
+#
+# where src is a pds src, perhaps obtained from another key in the event.
+# note - this will filter all data associated with that src that does not
+# have a keystring with it. The typical use is to transform DAQ data into
+# ndarrays or some other type, but still associate the transformed data
+# with the original src. As long as the transformed data has a nonzero key string
+# it will not be filtered by the above.
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # CALIBRATION FILTERING
