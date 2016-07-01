@@ -91,7 +91,7 @@ class PsanaModuleDetectorXface(object):
                 arr = det.calib(evt)
             elif self.detmethod == 'raw':
                 arr = det.raw(evt)
-            if arr is None and detmethod != 'raw':
+            if arr is None and self.detmethod != 'raw':
                 raw = det.raw(evt)
                 if raw is not None:
                     raise Exception("%s method for detector %s is None, however raw is "

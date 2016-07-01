@@ -11,6 +11,10 @@ Package author: David A. Schneider
 Please describe any modifications that you made to the package in the
 reverse time order.
 
+Tag: V00-02-55
+2016-7-1 David Schneider
+- fix bug
+	
 Tag: V00-02-54
 2016-6-22 David Schneider
 - add configuration options - detmethod, can be raw,image or calib, and
