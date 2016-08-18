@@ -50,7 +50,7 @@ namespace {
   }
 
   hid_t createH5TypeId_EpicsPvCtrlShort(hid_t pvNameType, hid_t unitsType, hid_t valueType, int numElem) {
-    size_t valueBaseSize = sizeof(Unroll::EpicsPvCtrlString::valueBaseType);
+    size_t valueBaseSize = sizeof(Unroll::EpicsPvCtrlShort::valueBaseType);
     hid_t typeId = H5Tcreate(H5T_COMPOUND, 
                              sizeof(Unroll::EpicsPvCtrlShort) + (numElem-1)*valueBaseSize);
     if (typeId < 0) MsgLog(logger, fatal, "Failed to create h5 type id for EpicsPvCtrlShort");
