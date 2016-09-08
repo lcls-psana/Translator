@@ -75,10 +75,11 @@ namespace Translator {
     /**
      *  @brief constructor for SplitScanMgr
      *
-     *  @param[in] h5filePath   - full path name for the master file.
+     *  @param[in] h5filePath - full path name for the master file.
      *                            All calib cycle files will be created in the same directory.
+     *  @param[in] ccInSubDir - 
      *  @param[in] splitScanMode - a SplitScan value
-     *  @param[in] linkGroupLoc - the group where the link is made.
+     *  @param[in] mpiWorkerStartCalibCycle - 
      *
      *  Typically linkGroupLoc will be for Run:0000 in the master file, and if calibNumber is
      *  for example 3, linkName will be CalibCycle:0003. If the master filename is output.h5,
@@ -114,7 +115,7 @@ namespace Translator {
      *
      * @param[in]     linkName - the group name of the link
      * @param[in]   targetName - the group name of the target in the external file, starting at /
-     * @param[in]   calibCycle - which calib cycle this is, used to construct the target file name
+     * @param[in]    extH5File - ... file name
      * @param[in] linkGroupLoc - the parent group to make the link in
      */
     bool createExtLink(const char *linkName,

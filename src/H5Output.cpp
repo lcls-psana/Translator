@@ -916,7 +916,7 @@ void H5Output::event(Event& evt, Env& env)
 }
 
 
-bool H5Output::isNDArray( const type_info *typeInfoPtr) {
+bool H5Output::isNDArray(const type_info *typeInfoPtr) {
   return m_h5groupNames->isNDArray(typeInfoPtr);
 }
 

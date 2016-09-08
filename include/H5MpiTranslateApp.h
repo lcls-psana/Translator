@@ -98,8 +98,8 @@ protected:
    *
    * @li sends done message to all workers
    *
-   * @param[input] cfgFile name of configuration file to initialize PSAna framework with
-   * @param[input] options dictionary of options to initialize PSAna framework with
+   * @param[in] cfgFile - name of configuration file to initialize PSAna framework with
+   * @param[in] options - dictionary of options to initialize PSAna framework with
    * 
    * @return non-zero if there was an error
    */
@@ -112,8 +112,8 @@ protected:
    *  if it is the end message, they are done, otherwise, they run the
    * Translator to write that calib cycle file.
    *
-   * @param[input] cfgFile name of configuration file to initialize PSAna framework with
-   * @param[input] options dictionary of options to initialize PSAna framework with
+   * @param[in] cfgFile - name of configuration file to initialize PSAna framework with
+   * @param[in] options - dictionary of options to initialize PSAna framework with
    * 
    * @return non-zero if there was an error
    */
@@ -129,12 +129,12 @@ protected:
    *
    * @li iterates over the events in the dataset
    *
-   * @param[input] cfgFile name of configuration file to initialize PSAna framework with
-   * @param[input] options dictionary of options to initialize PSAna framework with
-   * @param[input] startCalibCycle the starting calib cycle for the event at filePos
-   * @param[input] filePos array of MPIWorkerJob::FilePos structs giving file/offsets for starting
+   * @param[in] cfgFile - name of configuration file to initialize PSAna framework with
+   * @param[in] options - dictionary of options to initialize PSAna framework with
+   * @param[in] startCalibCycle - the starting calib cycle for the event at filePos
+   * @param[in] filePos - array of MPIWorkerJob::FilePos structs giving file/offsets for starting
    *               calib cycle
-   * @param[input] filePosLen the number of elements in the filePos array
+   * @param[in] filePosLen - the number of elements in the filePos array
    *
    * @throw std::runtime_error if Translator.H5Output is not among the input modules
    */
