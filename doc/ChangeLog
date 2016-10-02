@@ -11,6 +11,10 @@ Package author: David A. Schneider
 Please describe any modifications that you made to the package in the
 reverse time order.
 
+Tag: V00-02-59
+2016-09-30 David Schneider
+- update to pdsdata 8.6.16 and psddldata V01-00-48 for BldDataBeamMonitorV1 and BldUsdUsbV1
+
 Tag: V00-02-58
 2016-09-08 Mikhail Dubrovin
 - fix doxy-doc problems in H5MpiTranslateApp.h and SplitScanMgr.h

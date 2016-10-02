@@ -78,6 +78,10 @@ TypeAliases::TypeAliases() {
   Arraychar.insert( & typeid(Psana::Arraychar::DataV1));
   m_alias2TypesMap["Arraychar"] = Arraychar;
 
+  TypeInfoSet BeamMonitorBld;
+  BeamMonitorBld.insert( & typeid(Psana::Bld::BldDataBeamMonitorV1));
+  m_alias2TypesMap["BeamMonitorBld"] = BeamMonitorBld;
+
   TypeInfoSet Control;
   Control.insert( & typeid(Psana::ControlData::ConfigV1));
   Control.insert( & typeid(Psana::ControlData::ConfigV2));
@@ -315,6 +319,10 @@ TypeAliases::TypeAliases() {
   TypeInfoSet SharedPim;
   SharedPim.insert( & typeid(Psana::Bld::BldDataPimV1));
   m_alias2TypesMap["SharedPim"] = SharedPim;
+
+  TypeInfoSet SharedUsdUsb;
+  SharedUsdUsb.insert( & typeid(Psana::Bld::BldDataUsdUsbV1));
+  m_alias2TypesMap["SharedUsdUsb"] = SharedUsdUsb;
 
   TypeInfoSet Spectrometer;
   Spectrometer.insert( & typeid(Psana::Bld::BldDataSpectrometerV0));

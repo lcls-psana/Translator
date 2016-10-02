@@ -166,6 +166,7 @@ void HdfWriterMap::initialize() {
   m_mainMap[ & typeid(Psana::Arraychar::DataV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Arraychar::DataV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataAcqADCV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataAcqADCV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataAnalogInputV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataAnalogInputV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Bld::BldDataBeamMonitorV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataBeamMonitorV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataEBeamV0) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataEBeamV0> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataEBeamV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataEBeamV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataEBeamV2) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataEBeamV2> >(), DaqType);
@@ -186,6 +187,7 @@ void HdfWriterMap::initialize() {
   m_mainMap[ & typeid(Psana::Bld::BldDataPimV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataPimV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataSpectrometerV0) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataSpectrometerV0> >(), DaqType);
   m_mainMap[ & typeid(Psana::Bld::BldDataSpectrometerV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataSpectrometerV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Bld::BldDataUsdUsbV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Bld::BldDataUsdUsbV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Camera::FrameFccdConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Camera::FrameFccdConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Camera::FrameFexConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Camera::FrameFexConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Camera::FrameV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Camera::FrameV1> >(), DaqType);
