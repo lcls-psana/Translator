@@ -88,6 +88,10 @@ TypeAliases::TypeAliases() {
   Control.insert( & typeid(Psana::ControlData::ConfigV3));
   m_alias2TypesMap["Control"] = Control;
 
+  TypeInfoSet ControlsCamera;
+  ControlsCamera.insert( & typeid(Psana::Camera::ControlsCameraConfigV1));
+  m_alias2TypesMap["ControlsCamera"] = ControlsCamera;
+
   TypeInfoSet Cspad;
   Cspad.insert( & typeid(Psana::CsPad::ConfigV1));
   Cspad.insert( & typeid(Psana::CsPad::ConfigV2));
