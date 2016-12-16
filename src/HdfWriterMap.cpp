@@ -31,6 +31,7 @@ psddl/data/templates/hdf5Translator.tmpl?hdfwritermap_cpp
 #include "psddl_hdf2psana/gsc16ai.ddl.h"
 #include "psddl_hdf2psana/imp.ddl.h"
 #include "psddl_hdf2psana/ipimb.ddl.h"
+#include "psddl_hdf2psana/jungfrau.ddl.h"
 #include "psddl_hdf2psana/l3t.ddl.h"
 #include "psddl_hdf2psana/lusi.ddl.h"
 #include "psddl_hdf2psana/oceanoptics.ddl.h"
@@ -76,6 +77,7 @@ using namespace psddl_hdf2psana::Quartz;
 using namespace psddl_hdf2psana::Timepix;
 using namespace psddl_hdf2psana::Encoder;
 using namespace psddl_hdf2psana::CsPad;
+using namespace psddl_hdf2psana::Jungfrau;
 using namespace psddl_hdf2psana::Opal1k;
 using namespace psddl_hdf2psana::Pimax;
 using namespace psddl_hdf2psana::Princeton;
@@ -247,6 +249,8 @@ void HdfWriterMap::initialize() {
   m_mainMap[ & typeid(Psana::Ipimb::ConfigV2) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Ipimb::ConfigV2> >(), DaqType);
   m_mainMap[ & typeid(Psana::Ipimb::DataV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Ipimb::DataV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::Ipimb::DataV2) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Ipimb::DataV2> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Jungfrau::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Jungfrau::ConfigV1> >(), DaqType);
+  m_mainMap[ & typeid(Psana::Jungfrau::ElementV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::Jungfrau::ElementV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::L3T::ConfigV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::L3T::ConfigV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::L3T::DataV1) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::L3T::DataV1> >(), DaqType);
   m_mainMap[ & typeid(Psana::L3T::DataV2) ] = MapValue(boost::make_shared<HdfWriterPsana<Psana::L3T::DataV2> >(), DaqType);

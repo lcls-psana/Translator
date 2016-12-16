@@ -24,6 +24,7 @@
 #include "psddl_psana/gsc16ai.ddl.h"
 #include "psddl_psana/imp.ddl.h"
 #include "psddl_psana/ipimb.ddl.h"
+#include "psddl_psana/jungfrau.ddl.h"
 #include "psddl_psana/l3t.ddl.h"
 #include "psddl_psana/lusi.ddl.h"
 #include "psddl_psana/oceanoptics.ddl.h"
@@ -246,6 +247,11 @@ TypeAliases::TypeAliases() {
   IpmFex.insert( & typeid(Psana::Lusi::IpmFexConfigV2));
   IpmFex.insert( & typeid(Psana::Lusi::IpmFexV1));
   m_alias2TypesMap["IpmFex"] = IpmFex;
+
+  TypeInfoSet Jungfrau;
+  Jungfrau.insert( & typeid(Psana::Jungfrau::ConfigV1));
+  Jungfrau.insert( & typeid(Psana::Jungfrau::ElementV1));
+  m_alias2TypesMap["Jungfrau"] = Jungfrau;
 
   TypeInfoSet L3T;
   L3T.insert( & typeid(Psana::L3T::ConfigV1));
