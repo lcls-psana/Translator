@@ -8,7 +8,6 @@
 
 import os
 import sys
-from Translator.unitTests import *
 
 if __name__ == "__main__":
     sit_arch = os.environ.get('SIT_ARCH',None)
@@ -18,4 +17,5 @@ if __name__ == "__main__":
     # rhel5 build machine is heavily loaded, skip tests here
     if  sit_arch.find('-rhel5-')>0:
       sys.exit(0)
+    from Translator.unitTests import *
     unittest.main(argv=[sys.argv[0], '-v'])
