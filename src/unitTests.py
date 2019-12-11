@@ -270,11 +270,11 @@ def writeCfgFile(input_file, output_h5, moduleList="Translator.H5Output", psanaC
 class H5Output( unittest.TestCase ) :
 
     def setUp(self) :
-    	""" 
-    	Method called to prepare the test fixture. This is called immediately 
-    	before calling the test method; any exception raised by this method 
-    	will be considered an error rather than a test failure.  
-    	"""
+        """ 
+        Method called to prepare the test fixture. This is called immediately 
+        before calling the test method; any exception raised by this method 
+        will be considered an error rather than a test failure.  
+        """
         assert os.path.exists(ptl.getTestDataDir()), "Data dir: %s does not exist, cannot run unit tests" % ptl.getTestDataDir()
         self.outdir = outputDir('trnut')
         
