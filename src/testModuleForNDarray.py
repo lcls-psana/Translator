@@ -1,3 +1,4 @@
+from __future__ import print_function
 import psana
 import numpy as np
 
@@ -45,7 +46,7 @@ class testModuleForNDarray(object):
         X = makeArray(self.add_to_calib_data, self.add_to_calib_shape)
         if self.add_to_calib_src != '':
             env.calibStore().put(X, psana.Source(self.add_to_calib_src))
-        print env.calibStore().keys()
+        print(env.calibStore().keys())
 
     def event(self, evt, env):
         X = makeArray(self.add_to_event_data, self.add_to_event_shape)

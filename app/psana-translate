@@ -1,4 +1,5 @@
 #!@PYTHON@
+from __future__ import print_function
 
 import sys
 import os
@@ -136,7 +137,7 @@ defaultTranslatorOptions = (('overwrite','false'),
 
 args = sys.argv[1:]
 if len(args)==0 or args[0] == '-h' or args[0]=='--help':
-  print usage
+  print(usage)
   sys.exit(0)
   
 psanaArgs = []
@@ -144,11 +145,11 @@ while len(args)>0:
   if args[0].startswith('--output_file=') or args[0].startswith('--modules='):
     break
   if args[0] == '-m':
-    print "ERROR: don't use -m for modules, use --modules=... (and don't add H5Output, the script will)"
+    print("ERROR: don't use -m for modules, use --modules=... (and don't add H5Output, the script will)")
   psanaArgs.append(args.pop(0))
 
 if len(args)==0:
-  print "ERROR: no --output_file=argument given"
+  print("ERROR: no --output_file=argument given")
   sys.exit(1)
 
 moduleList=[]
@@ -158,11 +159,11 @@ if args[0].startswith('--modules='):
 
 # must provide output_file:
 if len(args)==0 or not args[0].startswith('--output_file='):
-  print "ERROR: no --output_file=argument given"
+  print("ERROR: no --output_file=argument given")
   sys.exit(1)
 
 if 'Translator.H5Output' in moduleList:
-  print "ERROR: Translator.H5Output is already in the module list, this script will add it to the end"
+  print("ERROR: Translator.H5Output is already in the module list, this script will add it to the end")
   sys.exit(1)
 moduleList.append('Translator.H5Output')
 
@@ -172,23 +173,23 @@ translatorOptions = [arg.split('--')[1].split('=')[0] for arg in translatorOptio
 try:
   translatorValues = [arg.split('--')[1].split('=')[1] for arg in translatorOptionArgs]
 except IndexError:
-  print "ERROR: a translator argument does not have a = sign in it"
+  print("ERROR: a translator argument does not have a = sign in it")
   sys.exit(1)
 badTranslatorOptions = [option for option in translatorOptions if option not in translatorDefaultOptions]
 if len(badTranslatorOptions)>0:
-  print "ERROR: bad translator options: %s" % ' '.join(badTranslatorOptions)
+  print("ERROR: bad translator options: %s" % ' '.join(badTranslatorOptions))
   sys.exit(1)
 
 inputArgs = [arg for arg in args if not arg.startswith('--')]
 if len(inputArgs)==0:
-  print "ERROR: no input arguments for psana"
+  print("ERROR: no input arguments for psana")
   sys.exit(1)
 
 lastTranslatorArg = max([args.index(arg) for arg in translatorOptionArgs])
 firstInputArg = min([args.index(arg) for arg in inputArgs])
 
 if firstInputArg <= lastTranslatorArg:
-  print "ERROR: input arguments '%s' do not follow translator options" % ' '.join(inputArgs)
+  print("ERROR: input arguments '%s' do not follow translator options" % ' '.join(inputArgs))
   sys.exit(1)
                         
 cfg = tempfile.NamedTemporaryFile(suffix='.cfg',prefix='psana-translate_')
@@ -203,7 +204,7 @@ psana_cmd = 'psana -c %s %s %s' % (cfg.name, ' '.join(psanaArgs), ' '.join(input
 
 os.system('cp %s %s' % (cfg.name, 'jnk.cfg'))
 os.system('cat jnk.cfg')
-print psana_cmd
+print(psana_cmd)
 
 os.system(psana_cmd)
 

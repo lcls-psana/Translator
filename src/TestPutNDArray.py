@@ -1,3 +1,4 @@
+from __future__ import print_function
 import psana
 import numpy as np
 
@@ -16,8 +17,8 @@ class TestPutNDArray(object):
         self.allevts += 1
         cspad = evt.get(psana.CsPad.DataV2, self.src)
         if cspad is None: 
-            print "Translator.TestPutNDArray: cc=%5d evt=%5d allevt=%7d: NO CSPAD" % (self.cc, self.ii, self.allevts)
+            print("Translator.TestPutNDArray: cc=%5d evt=%5d allevt=%7d: NO CSPAD" % (self.cc, self.ii, self.allevts))
             return
         arr = np.ones((2,3),np.float32)
         evt.put(arr,self.src, "myarray")
-        print "Translator.TestPutNDArray: cc=%5d evt=%5d allevt=%7d" % (self.cc, self.ii, self.allevts)
+        print("Translator.TestPutNDArray: cc=%5d evt=%5d allevt=%7d" % (self.cc, self.ii, self.allevts))

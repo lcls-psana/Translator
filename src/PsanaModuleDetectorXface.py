@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import sys
 import time
@@ -116,8 +117,8 @@ class PsanaModuleDetectorXface(object):
             src, det, alias, totaltime, numevents = \
                srd.src, srd.detector, srd.alias, srd.detxface_time, srd.evtnum
             hz = float(numevents)/totaltime
-            print "detetor=%s method=%s timed %.2f hz, %.2f sec (src=%s)" % \
-               (alias, self.detmethod, hz, totaltime, src)
+            print("detetor=%s method=%s timed %.2f hz, %.2f sec (src=%s)" % \
+               (alias, self.detmethod, hz, totaltime, src))
             if srd.convert_int16_time > 0:
-                print "   convert to int16 at %.2f hz (%.2f sec)" % \
-                    (numevents/srd.convert_int16_time, srd.convert_int16_time)
+                print("   convert to int16 at %.2f hz (%.2f sec)" % \
+                    (numevents/srd.convert_int16_time, srd.convert_int16_time))

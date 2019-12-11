@@ -1,3 +1,4 @@
+from __future__ import print_function
 #------------------------------------------------------------------------
 # Description:
 #   Test script for Translator/H5Output event processing
@@ -139,16 +140,16 @@ class MpiTestHelper(object):
                             extraOptions = extraOptions,
                             njobs=njobs, suppressWarnings = not verbose)
         if verbose:
-            print "------- trans cmd -------"
-            print self.transCmd
+            print("------- trans cmd -------")
+            print(self.transCmd)
 
         o,e = ptl.cmdTimeOut(self.transCmd, transCmdTimeOut)
 
         if verbose:
-            print " ------- trans stdout ------"
-            print o
-            print " ------- trans stderr ------"
-            print e
+            print(" ------- trans stdout ------")
+            print(o)
+            print(" ------- trans stderr ------")
+            print(e)
         else:
             eLns = e.split('\n')
             eLns = [ln for ln in eLns if not ptl.filterPsanaStderr(ln)]
@@ -215,18 +216,18 @@ def testDatasetsAgainstExpectedOutput(tester,h5,testList,cmpPlaces=4,verbose=Fal
     for dsname,dsCmpTo,msg in testList:
         ds = h5[dsname]
         if (verbose):
-            print "ds: %s" % dsname
+            print("ds: %s" % dsname)
         tester.assertEqual(len(ds),len(dsCmpTo), \
                          msg = "h5 dataset is wrong size.  ds.name=%s, len(ds)=%d len(dsCmpTo)=%d. %s" % (ds.name, len(ds), len(dsCmpTo), msg))
         for row in range(len(dsCmpTo)):
             if verbose:
-                print "ds      row=%d: %r" % (row, ds[row])
-                print "dsCmpTo row=%d: %r" % (row, dsCmpTo[row])
+                print("ds      row=%d: %r" % (row, ds[row]))
+                print("dsCmpTo row=%d: %r" % (row, dsCmpTo[row]))
             if ds.dtype and ds.dtype.names:
                 for i,fld in enumerate(ds.dtype.names):
                     if (verbose):
-                        print "tester.assertAlmostEqual, dsCmpTo[%d][%d]=%r ds[%d][%s]=%r, places=%d" % \
-                            (row,i,dsCmpTo[row][i],row,fld,ds[row][fld],cmpPlaces)
+                        print("tester.assertAlmostEqual, dsCmpTo[%d][%d]=%r ds[%d][%s]=%r, places=%d" % \
+                            (row,i,dsCmpTo[row][i],row,fld,ds[row][fld],cmpPlaces))
                     if fld == 'stamp':
                         tester.assertAlmostEqual(dsCmpTo[row][i][0],ds[row][fld][0],places=cmpPlaces, \
                                            msg="%s, dsname=%s, field is stamp.secsPastEpoch" % (msg,ds.name))
@@ -237,8 +238,8 @@ def testDatasetsAgainstExpectedOutput(tester,h5,testList,cmpPlaces=4,verbose=Fal
                                                  msg="%s, dsname=%s" % (msg,ds.name))
             else:
                 if (verbose):
-                    print "tester.assertAlmostEqual, dsCmpTo[%d]=%r ds[%d]=%r, places=%d" % \
-                            (row,dsCmpTo[row],row,ds[row],cmpPlaces)
+                    print("tester.assertAlmostEqual, dsCmpTo[%d]=%r ds[%d]=%r, places=%d" % \
+                            (row,dsCmpTo[row],row,ds[row],cmpPlaces))
                 tester.assertAlmostEqual(dsCmpTo[row],ds[row],places=cmpPlaces, \
                                        msg = "%s, dsname=%s" % (msg,ds.name))
 
@@ -319,19 +320,19 @@ class H5Output( unittest.TestCase ) :
         p = sb.Popen(psana_cmd,shell=True,stdout=sb.PIPE, stderr=sb.PIPE)
         o,e = p.communicate()
         if (output_h5 is not None) and (not os.path.exists(output_h5)):
-            print "### h5 file was not created. cfg file: ###"
-            print file(cfgfile.name).read()
-            print "### psana output: ###"
-            print o
-            print e
+            print("### h5 file was not created. cfg file: ###")
+            print(file(cfgfile.name).read())
+            print("### psana output: ###")
+            print(o)
+            print(e)
         if (output_h5 is not None):
             self.assertTrue(os.path.exists(output_h5),msg="h5 output file: %s not produced" % output_h5)
         allOutPut = o+'\n'+e
         if printPsanaOutput:
-            print allOutPut
+            print(allOutPut)
             sys.stdout.flush()
             if (output_h5 is not None):
-                print "*** Running h5ls -r on output_h5 (%s)"% output_h5
+                print("*** Running h5ls -r on output_h5 (%s)"% output_h5)
                 os.system('h5ls -r %s | grep -v -i epics' % output_h5)
         if not errorCheck:
             return allOutPut
@@ -1746,7 +1747,7 @@ class H5Output( unittest.TestCase ) :
                 try:
                     dset = f[dsetName]
                 except KeyError,e:
-                    print "couldn't open %s" % dsetName
+                    print("couldn't open %s" % dsetName)
                     raise e
                 self.assertTrue(all(arrAnswer == dset.value), msg="dset=%s but array=%r != expected=%r" % (dsetName,dset.value, arrAnswer))
 
@@ -1754,7 +1755,7 @@ class H5Output( unittest.TestCase ) :
                 try:
                     dset = f[dsetName]
                 except KeyError,e:
-                    print "couldn't open %s" % dsetName
+                    print("couldn't open %s" % dsetName)
                     raise e
                 self.assertEqual(dset.value, strAnswer, msg="dset=%s but str=%r != expected=%r" % (dsetName, dset.value, strAnswer))
 
@@ -1785,7 +1786,7 @@ class H5Output( unittest.TestCase ) :
         openTmpFile = tempfile.NamedTemporaryFile(prefix='tmp_test_evKeyFilter', suffix='.h5', 
                                                   delete=True)
         outputFile = openTmpFile.name
-        print outputFile
+        print(outputFile)
         del openTmpFile
         cmd += ' -o Translator.H5Output.output_file=' 
         cmd += outputFile
