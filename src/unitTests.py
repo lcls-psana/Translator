@@ -579,13 +579,13 @@ class H5Output( unittest.TestCase ) :
                         ('/Configure:0000/Run:0000/CalibCycle:0000/Bld::BldDataEBeamV3/EBeam/_mask',
                          [(1,)], 'ebeam mask'),
                         ('/Configure:0000/Run:0000/CalibCycle:0000/Bld::BldDataEBeamV3/EBeam/data',
-                         [(256L, 0.019605993696, 4813.759084237167, -0.21048433685050208, 0.008341444963823323, 0.032870595392491646, 0.0634931790398521, 15285.3740234375, 0.4098030626773834, 56.18963623046875, -0.2480001449584961)],
+                         [(256, 0.019605993696, 4813.759084237167, -0.21048433685050208, 0.008341444963823323, 0.032870595392491646, 0.0634931790398521, 15285.3740234375, 0.4098030626773834, 56.18963623046875, -0.2480001449584961)],
                          'ebeam data'),
                         ('/Configure:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/AMO:R14:IOC:10:VHS0:CH0:VoltageMeasure/data',
                          [ (44, 34, 1, 'AMO:R14:IOC:10:VHS0:CH0:VoltageMeasure', 5, 2, 3, 'V', 5000.0, 0.0, 5000.0, 5000.0, 0.0, 0.0, 5000.0, 0.0, 0.0)],
                          'config epics amo:r14:0c:10:vhs0:ch0:voltage measure'),
                         ('/Configure:0000/Run:0000/CalibCycle:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/AMO:R14:IOC:10:VHS0:CH0:VoltageMeasure/data',
-                         [(44, 20, 1, 5, 2, (728768506L, 940000000L), 0.0)],
+                         [(44, 20, 1, 5, 2, (728768506, 940000000), 0.0)],
                          'config epics amo:r14:0c:10:vhs0:ch0:voltage measure')]
 
             testDatasetsAgainstExpectedOutput(self,f,testList)
@@ -1297,18 +1297,18 @@ class H5Output( unittest.TestCase ) :
             f = h5py.File(output_h5,'r')
             cfg=f['Configure:0000/Partition::ConfigV1/Control/config']
             value=cfg.value
-            expected=(67108871L, 8L)
+            expected=(67108871, 8)
             self.assertEqual(value[0],expected[0],msg="bldMask wrong: read=%s expected=%s" % (value[0],expected[0]) )
             self.assertEqual(value[1],expected[1],msg="number of groups: read=%s expected=%s" % (value[1],expected[1]) )
             sources=f['Configure:0000/Partition::ConfigV1/Control/sources']
-            expectedSources = [((16788226L, 256L), 0L),
-                               ((16796544L, 184551937L), 1L),
-                               ((100682534L, 0L), 0L),
-                               ((100682534L, 1L), 0L),
-                               ((100682534L, 2L), 0L),
-                               ((100682534L, 26L), 0L),
-                               ((16796457L, 184552706L), 2L),
-                               ((16796017L, 184552707L), 3L)]
+            expectedSources = [((16788226, 256), 0),
+                               ((16796544, 184551937), 1),
+                               ((100682534, 0), 0),
+                               ((100682534, 1), 0),
+                               ((100682534, 2), 0),
+                               ((100682534, 26), 0),
+                               ((16796457, 184552706), 2),
+                               ((16796017, 184552707), 3)]
 
             for source,expected in zip(sources,expectedSources):
                 self.assertEqual(source[0][0],expected[0][0], "source logical wrong")
@@ -1550,8 +1550,8 @@ class H5Output( unittest.TestCase ) :
                         '/Configure:0000/Run:0000/CalibCycle:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/TTSPEC:FLTPOSFWHM',
                         '/Configure:0000/Run:0000/CalibCycle:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/TTSPEC:FLTPOS_PS',
                         '/Configure:0000/Run:0000/CalibCycle:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/TTSPEC:REFAMPL']
-            eventSeconds = [1402756826L,1402756826L,1402756826L]
-            eventNanoSeconds = [623769017L,657148262L,707163632L]
+            eventSeconds = [1402756826,1402756826,1402756826]
+            eventNanoSeconds = [623769017,657148262,707163632]
             for ttgroup in ttgroups:
                 gr = h5[ttgroup]
                 tm = gr['time']
@@ -1875,7 +1875,7 @@ class H5Output( unittest.TestCase ) :
 
         ooAliases = ['oospec_0','oospec_1','oospec_2']
         dsXtc = psana.DataSource(TESTDATA_OCEANOPTICS_DATAV3)
-        xtcDumps = dumpType(dsXtc.events().next(), ooAliases, psana.OceanOptics.DataV3)
+        xtcDumps = dumpType(next(dsXtc.events()), ooAliases, psana.OceanOptics.DataV3)
         del dsXtc
 
         with self.outdir:
@@ -1884,7 +1884,7 @@ class H5Output( unittest.TestCase ) :
             stdout, stderr = ptl.cmdTimeOut(cmd, 100)
             assert stderr.strip()=='', "errors with cmd=%s, stderr=%s" % (cmd, stderr)
             dsH5 = psana.DataSource(outputfile)
-            h5Dumps = dumpType(dsH5.events().next(), ooAliases, psana.OceanOptics.DataV3)
+            h5Dumps = dumpType(next(dsH5.events()), ooAliases, psana.OceanOptics.DataV3)
             del dsH5
             os.unlink(outputfile)
 

@@ -1,6 +1,7 @@
 from __future__ import print_function
 import psana
 import numpy as np
+from functools import reduce
 
 def makeArray(data,shape):
     X = np.array(data,dtype=np.float)
