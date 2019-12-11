@@ -1746,7 +1746,7 @@ class H5Output( unittest.TestCase ) :
             for dsetName in arrayDsets:
                 try:
                     dset = f[dsetName]
-                except KeyError,e:
+                except KeyError as e:
                     print("couldn't open %s" % dsetName)
                     raise e
                 self.assertTrue(all(arrAnswer == dset.value), msg="dset=%s but array=%r != expected=%r" % (dsetName,dset.value, arrAnswer))
@@ -1754,7 +1754,7 @@ class H5Output( unittest.TestCase ) :
             for dsetName in strDsets:
                 try:
                     dset = f[dsetName]
-                except KeyError,e:
+                except KeyError as e:
                     print("couldn't open %s" % dsetName)
                     raise e
                 self.assertEqual(dset.value, strAnswer, msg="dset=%s but str=%r != expected=%r" % (dsetName, dset.value, strAnswer))
