@@ -516,8 +516,8 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(len(maskSb3),2,"should be two entries in ipimb data mask")
             self.assertTrue((maskSb2[...]==np.zeros(2)).all())
             self.assertTrue((maskSb3[...]==np.zeros(2)).all())
-            self.assertFalse('data' in h5['/Configure:0000/Run:0000/CalibCycle:0000/Ipimb::DataV2/XppSb2_Ipm'].keys(),msg="should not have a 'data' dataset for ipimb")
-            self.assertFalse('data' in h5['/Configure:0000/Run:0000/CalibCycle:0000/Ipimb::DataV2/XppSb3_Ipm'].keys(),msg="should not have a 'data' dataset for ipimb")
+            self.assertFalse('data' in list(h5['/Configure:0000/Run:0000/CalibCycle:0000/Ipimb::DataV2/XppSb2_Ipm'].keys()),msg="should not have a 'data' dataset for ipimb")
+            self.assertFalse('data' in list(h5['/Configure:0000/Run:0000/CalibCycle:0000/Ipimb::DataV2/XppSb3_Ipm'].keys()),msg="should not have a 'data' dataset for ipimb")
             if self.cleanUp:
                 os.unlink(output_h5)
 
@@ -904,7 +904,7 @@ class H5Output( unittest.TestCase ) :
                                  'my_double3D':(psana.ndarray_float64_3,3),
                                  'cmy_double3D':(psana.ndarray_float64_3,3) }
             for eventNumber, evt in enumerate(ds.events()):
-                for keyStr, psanaTypeAndDim in keyStr2PsanaType.iteritems():
+                for keyStr, psanaTypeAndDim in keyStr2PsanaType.items():
                     psanaType, dims = psanaTypeAndDim
                     ndarray = evt.get(psanaType,keyStr)
                     self.assertFalse(ndarray is None, 
@@ -1024,7 +1024,7 @@ class H5Output( unittest.TestCase ) :
                                  'my_double3D':(psana.ndarray_float64_3,3),
                                  'cmy_double3D':(psana.ndarray_float64_3,3) }
             for eventNumber, evt in enumerate(ds.events()):
-                for keyStr, psanaTypeAndDim in keyStr2PsanaType.iteritems():
+                for keyStr, psanaTypeAndDim in keyStr2PsanaType.items():
                     psanaType, dims = psanaTypeAndDim
                     ndarray = evt.get(psanaType,keyStr)
                     self.assertFalse(ndarray is None, 
@@ -1249,8 +1249,8 @@ class H5Output( unittest.TestCase ) :
             cfgfile.file.flush()
             self.runPsanaOnCfg(cfgfile,output_file)
             h5 = h5py.File(output_file,'r')
-            self.assertEqual(h5.keys(),['Configure:0000'])
-            self.assertEqual(h5['Configure:0000'].keys(),['Run:0000'])
+            self.assertEqual(list(h5.keys()),['Configure:0000'])
+            self.assertEqual(list(h5['Configure:0000'].keys()),['Run:0000'])
             # cpo removed these tests on 8/26/17 since they break
             # when PSXtcInput started adding EventId to the configstore,
             # which seems to cause an "EndData" dataset to be written
