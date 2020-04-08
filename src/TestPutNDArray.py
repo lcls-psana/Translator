@@ -4,7 +4,7 @@ import numpy as np
 
 class TestPutNDArray(object):
     def __init__(self):        
-        self.src = self.configSrc('cspadsrc')
+        self.src = psana.Source('cspad')
         self.cc=-1
         self.allevts = -1
 

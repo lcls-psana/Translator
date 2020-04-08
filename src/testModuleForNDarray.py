@@ -22,7 +22,7 @@ class testModuleForNDarray(object):
         if len(self.add_to_calib_data) == 0:
             self.add_to_calib_data = [0,1,2,3]
         
-        self.add_to_event_src = self.configSrc("add_to_event_src","")
+        self.add_to_event_src = self.configSrc("add_to_event_src","BldInfo(XppSb2_Ipm)")
         self.add_to_event_shape = self.configListInt("add_to_event_shape")
         self.add_to_event_data = self.configListFloat("add_to_event_data")
         if len(self.add_to_event_shape) == 0:
