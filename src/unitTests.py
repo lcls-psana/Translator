@@ -19,6 +19,7 @@ import subprocess as sb
 import collections
 import math
 import numpy as np
+import six
 import glob
 #-----------------------------
 # Imports for other modules --
@@ -70,6 +71,8 @@ def makeMpiTransCmd(min_events_per_calib_file,
     returns the cmd
     '''
     mpiRunCmd = sb.check_output(['which','mpirun']).strip()
+    if six.PY3:
+        mpiRunCmd = mpiRunCmd.decode()
     assert mpiRunCmd.endswith('mpirun'), "no mpirun command found"
 
     # add -q since we don't have blt openib on local machines where we test, 
@@ -249,7 +252,7 @@ def writeCfgFile(input_file, output_h5, moduleList="Translator.H5Output", psanaC
     Returns the file like object so the user may add more options. This starts to 
     fill out the H5Output module options.
     '''
-    cfgfile = tempfile.NamedTemporaryFile(suffix='.cfg',prefix='translator-unit-test')
+    cfgfile = tempfile.NamedTemporaryFile(suffix='.cfg',prefix='translator-unit-test', mode='w')
     cfgfile.write("[psana]\n")
     cfgfile.write("modules = %s\n"%moduleList)
     cfgfile.write("files = %s\n" % input_file)
@@ -319,6 +322,9 @@ class H5Output( unittest.TestCase ) :
         psana_cmd = "psana %s -c %s" % (extraOpts,cfgfile.name)
         p = sb.Popen(psana_cmd,shell=True,stdout=sb.PIPE, stderr=sb.PIPE)
         o,e = p.communicate()
+        if six.PY3:
+            o = o.decode()
+            e = e.decode()
         if (output_h5 is not None) and (not os.path.exists(output_h5)):
             print("### h5 file was not created. cfg file: ###")
             print(file(cfgfile.name).read())
@@ -386,6 +392,7 @@ class H5Output( unittest.TestCase ) :
             testDatasetsAgainstExpectedOutput(self,h5,testList,cmpPlaces=4)
 
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
 
     def test_t1_end_damage(self):
@@ -429,6 +436,7 @@ class H5Output( unittest.TestCase ) :
             testDatasetsAgainstExpectedOutput(self,h5,testList,cmpPlaces=4)
 
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
 
     def test_t1_new_outoforder(self):
@@ -467,6 +475,7 @@ class H5Output( unittest.TestCase ) :
 
             testDatasetsAgainstExpectedOutput(self,h5,testList,cmpPlaces=4)
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
 
     def test_t1_previously_seen_out_of_order(self):
@@ -519,6 +528,7 @@ class H5Output( unittest.TestCase ) :
             self.assertFalse('data' in list(h5['/Configure:0000/Run:0000/CalibCycle:0000/Ipimb::DataV2/XppSb2_Ipm'].keys()),msg="should not have a 'data' dataset for ipimb")
             self.assertFalse('data' in list(h5['/Configure:0000/Run:0000/CalibCycle:0000/Ipimb::DataV2/XppSb3_Ipm'].keys()),msg="should not have a 'data' dataset for ipimb")
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
 
     def test_userEBeamDamage(self):
@@ -590,6 +600,7 @@ class H5Output( unittest.TestCase ) :
 
             testDatasetsAgainstExpectedOutput(self,f,testList)
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
 
     def test_outOfOrderFrame(self):
@@ -630,6 +641,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(frameDamage['OutOfOrder'][0],1)
             self.assertEqual(frameDamage['OutOfOrder'][1],1)
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
 
     def test_noDamageDroppedOutOfOrder(self):
@@ -662,6 +674,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(len(mask),4)
             self.assertTrue((mask[...]==np.array([1,0,0,0])).all())
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
         
     def test_dupTimesSplitEvents(self):
@@ -746,6 +759,7 @@ class H5Output( unittest.TestCase ) :
 
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
         
     def test_chunks(self):
@@ -777,6 +791,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(arrayDs.chunks[0],1)
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
         
 
@@ -814,6 +829,7 @@ class H5Output( unittest.TestCase ) :
                 f['/Configure:0000/Run:0000/Filtered:0000']
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
         
     def test_ndarraysWriteRead(self):
@@ -838,8 +854,8 @@ class H5Output( unittest.TestCase ) :
             uint1D = f['/Configure:0000/Run:0000/CalibCycle:0000/ndarray_uint32_1/noSrc__my_uint1D/data']
             str1ar =f['/Configure:0000/Run:0000/CalibCycle:0000/std::string/noSrc__my_string1/data'][...]
             str2ar =f['/Configure:0000/Run:0000/CalibCycle:0000/std::string/noSrc__my_string2/data'][...]
-            str1 = ' '.join(str1ar)
-            str2 = ' '.join(str2ar)
+            str1 = b' '.join(str1ar)
+            str2 = b' '.join(str2ar)
 
             cdouble3D = f['/Configure:0000/Run:0000/CalibCycle:0000/ndarray_const_float64_3/noSrc__cmy_double3D/data']
             cfloat2Da = f['/Configure:0000/Run:0000/CalibCycle:0000/ndarray_const_float32_2/noSrc__cmy_float2Da/data']
@@ -848,8 +864,8 @@ class H5Output( unittest.TestCase ) :
             cuint1D = f['/Configure:0000/Run:0000/CalibCycle:0000/ndarray_const_uint32_1/noSrc__cmy_uint1D/data']
 
 
-            str1expected = "This is event number: 1 This is event number: 2"
-            str2expected = "This is a second string.  10 * event number is 10 This is a second string.  10 * event number is 20"
+            str1expected = b"This is event number: 1 This is event number: 2"
+            str2expected = b"This is a second string.  10 * event number is 10 This is a second string.  10 * event number is 20"
 
             self.assertEqual(str1, str1expected, msg="str1=%s does not have expected value=%s" % (str1,str1expected))
             self.assertEqual(str2, str2expected, msg="str2=%s does not have expected value=%s" % (str2,str2expected))
@@ -1091,6 +1107,7 @@ class H5Output( unittest.TestCase ) :
                 f['/Configure:0000/Run:0000/CalibCycle:0000/std::string/noSrc__my_string2']
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
 
     def test_filter_key_exclude(self):
@@ -1123,6 +1140,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(len(f['/Configure:0000/Run:0000/CalibCycle:0000/ndarray_const_float64_3/noSrc__cmy_double3D/data']),2)
             self.assertEqual(len(f['/Configure:0000/Run:0000/CalibCycle:0000/ndarray_const_float32_2/noSrc__cmy_float2Db/data']),2)
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
 
     def test_filter_key_include(self):
@@ -1161,6 +1179,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(len(f['/Configure:0000/Run:0000/CalibCycle:0000/std::string/noSrc__my_string1/data']),2)
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
 
     def test_src_filter_include(self):
@@ -1190,6 +1209,7 @@ class H5Output( unittest.TestCase ) :
                         f['/Configure:0000/Run:0000/CalibCycle:0000/%s' % filteredGroup]
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
         
     def test_src_filter_exclude(self):
@@ -1219,6 +1239,7 @@ class H5Output( unittest.TestCase ) :
                     grp = f['/Configure:0000/Run:0000/CalibCycle:0000/%s' % includedGroup]
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
 
     def test_newWriter(self):
@@ -1237,6 +1258,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(MyData['eventCounter'][1],2)
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
 
     def test_type_filter(self):
@@ -1282,6 +1304,7 @@ class H5Output( unittest.TestCase ) :
             hasTypes = [ ln.find('EvrData')>=0 or ln.find('IpmFex')>=0 for ln in o.strip().split('\n') ]
             self.assertTrue(all(hasTypes), "all lines are EvrData or IpmFex")
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_file)
         
     def test_partition(self):
@@ -1315,6 +1338,7 @@ class H5Output( unittest.TestCase ) :
                 self.assertEqual(source[0][1],expected[0][1], "source physical wrong")
                 self.assertEqual(source[1],expected[1], "group wrong")
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
         
     def test_alias(self):
@@ -1362,9 +1386,13 @@ class H5Output( unittest.TestCase ) :
             cmd = 'h5ls -r %s | grep "SxrEndstation.0:Acqiris.0\|SxrEndstation.0:Acqiris.2"' % output_h5
             p = sb.Popen(cmd,shell=True,stdout=sb.PIPE,stderr=sb.PIPE)
             o,e = p.communicate()
+            if six.PY3:
+                o = o.decode()
+                e = e.decode()
             self.assertEqual(e.strip(),"",msg="There was a problem running h5ls: stderr=%s"%e.strip())
             self.assertEqual(o.strip(),"",msg="The src's were not filtered by the aliases, output of h5ls -r is: %s" % o)
             if self.cleanUp:
+                h5file.close()
                 os.unlink(output_h5)
 
     def test_calibstore(self):
@@ -1399,6 +1427,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual(commonMode['mode'],1,msg="CsPadCommonModeSubV1.mode != 1, it was 1 when test was developed")
             self.assertEqual(commonMode['data'][0],24.,msg="CsPadCommonModeSubV1.data[0] != 24., it was 24. when test was developed")
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
             
     def test_calibrationDamage(self):
@@ -1471,6 +1500,7 @@ class H5Output( unittest.TestCase ) :
                                   u'pdscalibdata::CsPad2x2PixelGainV1',
                                   u'pdscalibdata::CsPadCommonModeSubV1']),
                              msg = "calibStore does not contain only pdscalibdata::CsPad2x2PedestalsV1, pdscalibdata::CsPad2x2PixelStatusV1, pdscalibdata::CsPad2x2PixelGainV1, pdscalibdata::CsPadCommonModeSubV1")
+            f.close()
             del f
             os.unlink(output_h5)
 
@@ -1503,6 +1533,7 @@ class H5Output( unittest.TestCase ) :
             self.assertEqual( cspad1inH5, cspad1raw, msg=failMsg1)
 
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
             
     def test_keyAndSrcFilter(self):
@@ -1525,6 +1556,9 @@ class H5Output( unittest.TestCase ) :
             cmd = 'h5ls -r %s' % output_h5
             p = sb.Popen(cmd, shell=True, stdout=sb.PIPE, stderr=sb.PIPE)
             o,e = p.communicate()
+            if six.PY3:
+                o = o.decode()
+                e = e.decode()
             assert e==''
             lns = [ ln for ln in o.split('\n') if ln.find('XppSb2_Ipm')>=0]
             lnsWithNDarray = [ln for ln in lns if ln.lower().find('ndarray')>=0]
@@ -1564,6 +1598,7 @@ class H5Output( unittest.TestCase ) :
                     self.assertEqual(tmRec['nanoseconds'], nano, msg="nanoseconds disagree for event=%d of time dataset, group=%s" % (idx,ttgroup))
 
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
 
     def test_observeSkipEvents(self):
@@ -1581,6 +1616,7 @@ class H5Output( unittest.TestCase ) :
             double3D = f['/Configure:0000/Run:0000/CalibCycle:0000/ndarray_float64_3/noSrc__my_double3D/data']
             self.assertEqual(1,len(double3D),msg="downstream module skipped first event. Expected 1 translated event, but found %d" % len(double3D))
             if self.cleanUp:
+                f.close()
                 os.unlink(output_h5)
 
     def test_mpisplitscan(self):
@@ -1601,6 +1637,9 @@ class H5Output( unittest.TestCase ) :
             diff_cmd = 'diff %s %s' % (mpiTest.xtc_dump, mpiTest.h5_dump)
             p = sb.Popen(diff_cmd, shell=True, stdout=sb.PIPE, stderr=sb.PIPE)
             o,e = p.communicate()
+            if six.PY3:
+                o = o.decode()
+                e = e.decode()
             self.assertEqual(o,'',msg='diff of xtc and mpi-splitscan translate h5 not the same.\ncmd: %s\nhas stdout=%s' % (diff_cmd, o))
             self.assertEqual(e,'',msg='diff of xtc and mpi-splitscan translate h5 not the same.\ncmd: %s\nhas stderr=%s' % (diff_cmd, e))
 
@@ -1700,6 +1739,9 @@ class H5Output( unittest.TestCase ) :
                                   u'pdscalibdata::CsPadCommonModeSubV1',
                                   u'pdscalibdata::CsPad2x2PixelGainV1']),
                              msg = "calibStore does not contain only pdscalibdata::CsPad2x2PedestalsV1, pdscalibdata::CsPad2x2PixelStatusV1, pdscalibdata::CsPadCommonModeSubV1, pdscalibdata::CsPad2x2PixelGainV1")
+            if self.cleanUp:
+                f.close()
+                os.unlink(mpiTest.output_h5)
 
     def test_mpiSplitScan_endData(self):
         '''Test that end data is written during mpi split scan
@@ -1801,6 +1843,7 @@ class H5Output( unittest.TestCase ) :
         expected.add('XrayTransportDiagnostic.0:OrcaFl40.0')
         expected.add('XppEndstation.0:Opal1000.0')
         self.assertEqual(srcs, expected)
+        f.close()
         os.unlink(outputFile)
 
     def test_addBlankNDarray(self):
@@ -1921,6 +1964,9 @@ class H5Output( unittest.TestCase ) :
                 self.assertEqual(cfgOffset, h5['Configure:0000/Generic1D::ConfigV0/MfxEndstation.0:Wave8.0/Offset'][ch], msg='ch=%d offset wrong' % ch)
                 chMeanH5evt0 = np.mean(h5['Configure:0000/Run:0000/CalibCycle:0000/Generic1D::DataV0/MfxEndstation.0:Wave8.0/channel:%2.2d' % ch][0])
                 self.assertAlmostEqual(evtChMeans[ch], chMeanH5evt0 , places=1, msg='ch=%d evt expected=%.2f != h5=%.2f' % (ch, evtChMeans[ch], chMeanH5evt0))
+            if self.cleanUp:
+                h5.close()
+                os.unlink(outputfile)
 
     def test_epics(self):
         '''Test epics translation. test_020 has 4 kinds of epics, string, short, enum, long and double.
@@ -1938,7 +1984,7 @@ class H5Output( unittest.TestCase ) :
 
             # string '08/23/2011 06:28:38'
             cfgDbr28 = h5['/Configure:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/SIOC:SYS0:ML00:TOD/data']
-            self.assertEqual(cfgDbr28['value'][0], '08/23/2011 06:28:38', msg="%s != %s name=%s" % (cfgDbr28['value'][0], '08/23/2011 06:28:38', cfgDbr28.name))
+            self.assertEqual(cfgDbr28['value'][0], b'08/23/2011 06:28:38', msg="%s != %s name=%s" % (cfgDbr28['value'][0], '08/23/2011 06:28:38', cfgDbr28.name))
 
             # double data=-4.0000e+01
             cfgDbr34 = h5['/Configure:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/SXR:DFP:MMS:01.RBV/data']
@@ -1948,8 +1994,8 @@ class H5Output( unittest.TestCase ) :
             cfgDbr31 = h5['/Configure:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/SXR:EXP:AOT:02:Lock/data']
             self.assertEqual( cfgDbr31['value'][0], 1, msg="%s !=%s name=%s" % (cfgDbr31['value'][0], 1, cfgDbr31.name))
             self.assertEqual( cfgDbr31['no_str'][0], 2, msg="no_str: %s !=%s name=%s" % (cfgDbr31['no_str'][0], 2, cfgDbr31.name))
-            self.assertEqual( cfgDbr31['strs'][0][0], 'Unlocked', msg="strs[0]: %s !=%s name=%s" % (cfgDbr31['strs'][0][0], 'Unlocked', cfgDbr31.name))
-            self.assertEqual( cfgDbr31['strs'][0][1], 'Locked', msg="strs[1]: %s !=%s name=%s" % (cfgDbr31['strs'][0][1], 'Locked', cfgDbr31.name))
+            self.assertEqual( cfgDbr31['strs'][0][0], b'Unlocked', msg="strs[0]: %s !=%s name=%s" % (cfgDbr31['strs'][0][0], 'Unlocked', cfgDbr31.name))
+            self.assertEqual( cfgDbr31['strs'][0][1], b'Locked', msg="strs[1]: %s !=%s name=%s" % (cfgDbr31['strs'][0][1], 'Locked', cfgDbr31.name))
 
             # short data=0   upper_ctrl_limit=32767 lower_ctrl_limit=-32768
             cfgDbr29 = h5['/Configure:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/SXR:SPS:MMS:01.HLS/data']
@@ -1965,7 +2011,7 @@ class H5Output( unittest.TestCase ) :
 
             # string stamp.sec=682956951 stamp.nsec=227500000 data=['08/23/2011 07:15:51']
             evtDbr14 = h5['/Configure:0000/Run:0000//CalibCycle:0000/Epics::EpicsPv/EpicsArch.0:NoDevice.0/SIOC:SYS0:ML00:TOD/data']
-            self.assertEqual( evtDbr14['value'][0], '08/23/2011 07:15:51', msg="%s !=%s name=%s" % (evtDbr14['value'][0], 10000, evtDbr14.name))
+            self.assertEqual( evtDbr14['value'][0], b'08/23/2011 07:15:51', msg="%s !=%s name=%s" % (evtDbr14['value'][0], 10000, evtDbr14.name))
             self.assertEqual( evtDbr14['stamp']['secPastEpoch'][0], 682956951, msg="stamp.sec %s !=%s name=%s" % (evtDbr14['stamp']['secPastEpoch'][0], 682956951, evtDbr14.name))
             self.assertEqual( evtDbr14['stamp']['nsec'][0], 227500000, msg="stamp.nsec %s !=%s name=%s" % (evtDbr14['stamp']['nsec'][0], 227500000, evtDbr14.name))
 
@@ -1989,6 +2035,7 @@ class H5Output( unittest.TestCase ) :
 
 
             if self.cleanUp:
+                h5.close()
                 os.unlink(output_h5)
         
 #    In the future, I would like to translate ndarrays that are placed in the 
@@ -2010,6 +2057,7 @@ class H5Output( unittest.TestCase ) :
     #        cfgfile.close()
     #        h5 = h5py.File(output_h5,'r')
     #        if self.cleanUp:
+    #            h5.close()
     #            os.unlink(output_h5)
 
 
