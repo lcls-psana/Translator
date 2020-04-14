@@ -237,7 +237,10 @@ def testDatasetsAgainstExpectedOutput(tester,h5,testList,cmpPlaces=4,verbose=Fal
                         tester.assertAlmostEqual(dsCmpTo[row][i][1],ds[row][fld][1],places=cmpPlaces, \
                                            msg="%s, dsname=%s, field is stamp.nsec" % (msg,ds.name))
                     else:
-                        tester.assertAlmostEqual(dsCmpTo[row][i],ds[row][fld],places=cmpPlaces, \
+                        a, b = dsCmpTo[row][i], ds[row][fld]
+                        if six.PY3 and isinstance(b, bytes):
+                            b = b.decode()
+                        tester.assertAlmostEqual(a, b,places=cmpPlaces, \
                                                  msg="%s, dsname=%s" % (msg,ds.name))
             else:
                 if (verbose):
@@ -600,7 +603,7 @@ class H5Output( unittest.TestCase ) :
 
             testDatasetsAgainstExpectedOutput(self,f,testList)
             if self.cleanUp:
-                h5.close()
+                f.close()
                 os.unlink(output_h5)
 
     def test_outOfOrderFrame(self):
@@ -1300,6 +1303,9 @@ class H5Output( unittest.TestCase ) :
             cmd = 'h5ls -r %s | grep data' % output_file
             p = sb.Popen(cmd, shell=True, stdout=sb.PIPE, stderr=sb.PIPE)
             o,e = p.communicate()
+            if six.PY3:
+                o = o.decode()
+                e = e.decode()
             self.assertEqual(e,'')
             hasTypes = [ ln.find('EvrData')>=0 or ln.find('IpmFex')>=0 for ln in o.strip().split('\n') ]
             self.assertTrue(all(hasTypes), "all lines are EvrData or IpmFex")
@@ -1338,7 +1344,7 @@ class H5Output( unittest.TestCase ) :
                 self.assertEqual(source[0][1],expected[0][1], "source physical wrong")
                 self.assertEqual(source[1],expected[1], "group wrong")
             if self.cleanUp:
-                h5.close()
+                f.close()
                 os.unlink(output_h5)
         
     def test_alias(self):
