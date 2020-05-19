@@ -76,11 +76,11 @@ void HdfWriterString::append(hid_t groupId, const std::string & msg)
   try {
     m_writer.append(groupId, datasetName, wdata);
   } catch (ErrSvc::Issue &issue) {
-    std::ostringstream msg;
-    msg << "HdfWriterEventId::append failed to write filter msg = " 
-        << msg
-        << " - generic writer failed: " << issue.what();
-    throw HdfWriterGeneric::WriteException(ERR_LOC,msg.str());
+    std::ostringstream errmsg;
+    errmsg << "HdfWriterEventId::append failed to write filter msg = " 
+           << msg
+           << " - generic writer failed: " << issue.what();
+    throw HdfWriterGeneric::WriteException(ERR_LOC,errmsg.str());
   }
 }
 

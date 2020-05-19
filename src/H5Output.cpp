@@ -992,7 +992,7 @@ boost::shared_ptr<HdfWriterFromEvent> H5Output::checkTranslationFilters(PSEvt::E
       // supported. However if we can detect that the user did this, print a warning.
       // If ndarrays weren't filtered, then print the warning. Check for an ndarray 
       // (any ndarray will do to see if they are filtered or not)
-      bool ndArraysNotFiltered = m_hdfWriters.find(&typeid(ndarray<uint8_t,1>));
+      bool ndArraysNotFiltered = (bool)m_hdfWriters.find(&typeid(ndarray<uint8_t,1>));
       if (ndArraysNotFiltered) {
         MsgLog(logger, warning, "vlen prefix found for key: " 
                << eventKey << " but the type is not a known ndarray");
