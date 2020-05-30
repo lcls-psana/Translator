@@ -13,7 +13,7 @@
 //-----------------
 // C/C++ Headers --
 //-----------------
-#include "openmpi/mpi.h"
+#include "mpi.h"
 
 //-------------------------------
 // Collaborating Class Headers --

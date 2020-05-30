@@ -18,7 +18,7 @@
 //-----------------
 // C/C++ Headers --
 //-----------------
-#include "openmpi/mpi.h"
+#include "mpi.h"
 #include "boost/lexical_cast.hpp"
 
 //             ----------------------------------------

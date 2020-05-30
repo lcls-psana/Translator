@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "openmpi/mpi.h"
+#include "mpi.h"
 #include "Translator/H5MpiTranslateApp.h"
 
 using namespace Translator;
